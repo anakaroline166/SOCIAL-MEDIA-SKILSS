@@ -1,7 +1,13 @@
-import sys, subprocess
+import sys, subprocess, os, json
 from PIL import Image, ImageDraw, ImageFont
 
 OUT, LOGO, FONTS, IMGS, CUTS = sys.argv[1:6]
+NOTEXT = bool(os.environ.get("NOTEXT")); REC=[]; slides=[]
+_orig_text = ImageDraw.ImageDraw.text
+def _text(self, xy, text, fill=None, font=None, anchor=None, *a, **k):
+    REC.append(dict(slide=len(slides)+1, x=float(xy[0]), y=float(xy[1]), text=text, size=font.size, bold=("IntroBold" in font.path), color=list(fill) if isinstance(fill,tuple) else fill))
+    if not NOTEXT: _orig_text(self, xy, text, fill=fill, font=font, anchor=anchor, *a, **k)
+ImageDraw.ImageDraw.text = _text
 W, H = 1920, 1080
 M = 110                                   # margem igual nos 4 lados
 VIN, CORAL, CREME, CARD, GRAY, NAVY, WHITE = (75,15,47), (255,111,104), (255,247,242), (255,239,232), (140,110,125), (43,27,77), (255,255,255)
@@ -10,6 +16,7 @@ BOX  = (M, 190, W-M, 890)                   # área útil (acima da faixa do log
 LEFT = (M, 190, 930, 890)                   # coluna do texto quando há foto
 PHOTO= (1110, 190, W-M, 890)                # coluna da foto (760 x 760)
 
+ccx=(PHOTO[0]+PHOTO[2])//2; ccy=(PHOTO[1]+PHOTO[3])//2
 def F(w, s):
     return ImageFont.truetype(f"{FONTS}/{'IntroBold' if w in ('ExtraBold','Bold') else 'IntroBook'}.otf", max(int(s),8))
 
@@ -113,7 +120,6 @@ def new(dark=False):
     return im, ImageDraw.Draw(im)
 def footnote(txt): return T([[(txt,GRAY)]],"Medium",30)
 
-slides=[]
 # 1
 img,d=new(); stack(img,d,[T([[("Quanto ",VIN),("custa",CORAL),(" para sua",VIN)],[("empresa um funcionário",VIN)],[("não conseguir trabalhar?",VIN)]],"Bold",150)],BOX)
 paste_logo(img); slides.append((img,9))
@@ -121,7 +127,8 @@ paste_logo(img); slides.append((img,9))
 img,d=new(); stack(img,d,[T([[("Agora multiplique por",VIN)]],"Medium",70),T([[("×100",CORAL)]],"Bold",380),T([[("funcionários.",VIN)]],"Bold",110)],LEFT,cap=1.0,align='left')
 photo_card(img,"16.jpg",PHOTO,(0.5,0.45)); paste_logo(img); slides.append((img,6))
 # 3
-img,d=new(); stack(img,d,[T([[("Um dia de falta não custa",VIN)]],"Bold",90),T([[("R$ 54.",CORAL)]],"Bold",260),T([[("Custa muito mais.",VIN)]],"Bold",110),CARDI("O salário é só a ponta do custo.",44),footnote("Base: salário mínimo 2026 (R$ 1.621 ÷ 30 dias)")],BOX)
+img,d=new(); stack(img,d,[T([[("Um dia de falta não custa",VIN)]],"Bold",112),T([[("R$ 54.",CORAL)]],"Bold",310),T([[("Custa muito mais.",VIN)]],"Bold",136),CARDI("O salário é só a ponta do custo.",54)],BOX,cap=1.0)
+d.text((M,H-80),"Base: salário mínimo 2026 (R$ 1.621 ÷ 30 dias)",font=F("Medium",28),fill=GRAY,anchor="ls")
 paste_logo(img); slides.append((img,9))
 # 4
 img,d=new(); stack(img,d,[T([[("“",CORAL)]],"Bold",300),T([[("A falta aparece no ponto.",VIN)],[("O prejuízo aparece no ",VIN),("resultado.",CORAL)]],"Bold",110)],BOX)
@@ -152,17 +159,18 @@ stack(img,d,[CARDI("NR-1  ·  RISCOS PSICOSSOCIAIS",34,"Bold",WHITE,CORAL),
   T([[("A Nexia faz grande parte desse caminho,",CREME)],[("com suporte e pós-venda.",CREME)]],"Medium",40),
   CARDI("Entre e converse com a gente  →",44,"Bold",VIN,CREME)],LEFT,cap=1.0,align='left')
 photo_card(img,"15.jpg",PHOTO,(0.56,0.5),tint=70); paste_logo(img,white=True); slides.append((img,9,True))
-# 9 médico
-img,d=new()
-words=["Cuidar","da","saúde","pode","ser","caro.","Não","cuidar","é"]
-stack(img,d,[T([[(w_,VIN)] for w_ in words],"Bold",58),T([[("mais caro",CORAL)]],"Bold",170),T([[("ainda.",VIN)]],"Bold",58)],LEFT,cap=1.0,align="left")
-cx0,cy0,cx1,cy1 = PHOTO; ccx=(cx0+cx1)//2; ccy=(cy0+cy1)//2
-d.ellipse(PHOTO, fill=CORAL)
-doc=cutout("medico_birefnet-general-lite.png"); w=680; h=int(doc.height*w/doc.width); doc=doc.resize((w,h),Image.LANCZOS)
-layer=Image.new("RGBA",(W,H),(0,0,0,0)); layer.paste(doc,(ccx-w//2, cy1-h),doc)
-clip=Image.new("L",(W,H),0); cd=ImageDraw.Draw(clip); cd.ellipse(PHOTO,fill=255); cd.rectangle((0,0,W,ccy),fill=255)
-al=layer.getchannel("A"); layer.putalpha(Image.composite(al,Image.new("L",(W,H),0),clip))
-img.paste(layer,(0,0),layer); paste_logo(img); slides.append((img,9))
+# 12a e 12b: médico (mesmo recorte nas duas, só o texto troca)
+def slide_doctor(items,dur):
+    img,d=new(); stack(img,d,items,LEFT,cap=1.0,align="left")
+    cx0,cy0,cx1,cy1 = PHOTO; ccx=(cx0+cx1)//2; ccy=(cy0+cy1)//2
+    d.ellipse(PHOTO, fill=CORAL)
+    doc=cutout("medico_birefnet-general-lite.png"); w=680; h=int(doc.height*w/doc.width); doc=doc.resize((w,h),Image.LANCZOS)
+    layer=Image.new("RGBA",(W,H),(0,0,0,0)); layer.paste(doc,(ccx-w//2, cy1-h),doc)
+    clip=Image.new("L",(W,H),0); cd=ImageDraw.Draw(clip); cd.ellipse(PHOTO,fill=255); cd.rectangle((0,0,W,ccy),fill=255)
+    al=layer.getchannel("A"); layer.putalpha(Image.composite(al,Image.new("L",(W,H),0),clip))
+    img.paste(layer,(0,0),layer); paste_logo(img); slides.append((img,dur))
+slide_doctor([T([[(w_,VIN)] for w_ in ["Cuidar","da","saúde","pode","ser","caro."]],"Bold",120)],6)
+slide_doctor([T([[(w_,VIN)] for w_ in ["Não","cuidar","é"]],"Bold",120),T([[("mais caro",CORAL)]],"Bold",230),T([[("ainda.",VIN)]],"Bold",120)],7)
 # 10 médica no celular
 img,d=new()
 stack(img,d,[T([[("Saúde na palma",VIN)],[("da mão.",VIN)],[("Sem deslocamento.",CORAL)]],"Bold",100),PILLS(["Clínico geral 24h","Mais de 12 especialidades","Psicologia e nutrição","Clubes de benefícios nacional e regional"],32)],LEFT,cap=1.0,align="left")
@@ -196,9 +204,12 @@ photo_card(img,"19.jpg",(870,190,W-M,890),(0.38,0.5)); paste_logo(img); slides.a
 img,d=new(); stack(img,d,[T([[("Vamos conversar",VIN)],[("sobre o futuro",VIN)],[("da ",VIN),("sua equipe?",CORAL)]],"Bold",104),CARDI("@nexiasaude  |  (88) 8191-1058",38,"Bold")],LEFT,cap=1.0,align='left')
 photo_card(img,"18.jpg",PHOTO,(0.36,0.45)); paste_logo(img); slides.append((img,9))
 
+if NOTEXT:
+    json.dump(dict(texts=REC, durs=[sl[1] for sl in slides]), open(f"{OUT}/texto.json","w"), ensure_ascii=False)
 paths=[];durs=[];anim=[]
 for i,sl in enumerate(slides,1):
     p=f"{OUT}/slides/tela_{i:02d}.png"; sl[0].save(p); paths.append(p); durs.append(sl[1]); anim.append(len(sl)>2)
+if NOTEXT: print('base ok', len(slides)); sys.exit(0)
 FADE=0.6; FPS=30; cmd=["ffmpeg","-y"]
 for p,dur,a in zip(paths,durs,anim): cmd += ["-i",p] if a else ["-loop","1","-t",str(dur),"-framerate",str(FPS),"-i",p]
 fc=[];labels=[]
