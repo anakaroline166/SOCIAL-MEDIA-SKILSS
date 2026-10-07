@@ -76,7 +76,7 @@ def prep(it, s, boxw):
     elif it["k"]=="pills":
         ph=int(84*s); it["_ph"]=ph; it["_h"]=len(it["txts"])*ph+(len(it["txts"])-1)*int(22*s)
     else: it["_h"]=it["h"]
-def stack(img, d, items, box, bg_dark=False, cap=0.9):
+def stack(img, d, items, box, bg_dark=False, cap=0.9, align='center'):
     x0,y0,x1,y1 = box; bw,bh = x1-x0, y1-y0; cx=(x0+x1)/2
     s=1.0
     while True:
@@ -89,7 +89,7 @@ def stack(img, d, items, box, bg_dark=False, cap=0.9):
         if it["k"]=="text":
             f,lh,tops,bots,ws,h=it["_m"]
             for i,l in enumerate(it["lines"]):
-                x=cx-ws[i]/2; by=y+tops[0]+i*lh
+                x=(x0 if align=='left' else cx-ws[i]/2); by=y+tops[0]+i*lh
                 for txt,c in l:
                     d.text((x,by),txt,font=f,fill=c,anchor="ls"); x+=d.textlength(txt,font=f)
         elif it["k"]=="card":
@@ -99,11 +99,11 @@ def stack(img, d, items, box, bg_dark=False, cap=0.9):
         elif it["k"]=="pills":
             f=F("Bold",it["size"]*s); ph=it["_ph"]; yy=y
             for t in it["txts"]:
-                w=d.textlength(t,font=f)+130
-                d.rounded_rectangle((cx-w/2,yy,cx+w/2,yy+ph), radius=ph//2, fill=CARD)
-                d.ellipse((cx-w/2+34,yy+ph/2-14,cx-w/2+62,yy+ph/2+14), fill=CORAL)
+                w=d.textlength(t,font=f)+130; px0=(x0 if align=='left' else cx-w/2)
+                d.rounded_rectangle((px0,yy,px0+w,yy+ph), radius=ph//2, fill=CARD)
+                d.ellipse((px0+34,yy+ph/2-14,px0+62,yy+ph/2+14), fill=CORAL)
                 bb=d.textbbox((0,0),t,font=f,anchor="ls")
-                d.text((cx-w/2+86, yy+ph/2-(bb[1]+bb[3])/2), t, font=f, fill=VIN, anchor="ls")
+                d.text((px0+86, yy+ph/2-(bb[1]+bb[3])/2), t, font=f, fill=VIN, anchor="ls")
                 yy+=ph+int(22*s)
         else:
             it["fn"](img,d,x0,y,bw)
@@ -155,7 +155,7 @@ al=layer.getchannel("A"); layer.putalpha(Image.composite(al,Image.new("L",(W,H),
 img.paste(layer,(0,0),layer); paste_logo(img); slides.append((img,9))
 # 10 médica no celular
 img,d=new()
-stack(img,d,[T([[("Saúde na palma",VIN)],[("da mão.",VIN)],[("Sem deslocamento.",CORAL)]],"Bold",100),PILLS(["Clínico geral 24h","Mais de 12 especialidades","Psicologia e nutrição","Clubes de benefícios nacional e regional"],32)],LEFT,cap=1.0)
+stack(img,d,[T([[("Saúde na palma",VIN)],[("da mão.",VIN)],[("Sem deslocamento.",CORAL)]],"Bold",100),PILLS(["Clínico geral 24h","Mais de 12 especialidades","Psicologia e nutrição","Clubes de benefícios nacional e regional"],32)],LEFT,cap=1.0,align="left")
 d.ellipse(PHOTO, fill=CORAL)
 PX0,PX1,PY0,PY1 = ccx-210, ccx+210, PHOTO[1]+70, PHOTO[3]
 mask=Image.new("L",(PX1-PX0,PY1-PY0),0); ImageDraw.Draw(mask).rounded_rectangle((0,0,PX1-PX0,PY1-PY0),radius=70,fill=255)
