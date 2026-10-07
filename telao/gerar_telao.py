@@ -1,7 +1,7 @@
 import sys, subprocess
 from PIL import Image, ImageDraw, ImageFont
 
-OUT, LOGO, FONTS, IMGS = sys.argv[1:5]
+OUT, LOGO, FONTS, IMGS, CUTS = sys.argv[1:6]
 W, H = 1920, 1080
 VIN, CORAL, CREME, CARD, GRAY = (75,15,47), (255,111,104), (255,247,242), (255,239,232), (140,110,125)
 def F(w, s):
@@ -53,19 +53,31 @@ def photo_card(img, name, box, focus=(0.5,0.5), tint=115, radius=50):
     mask = Image.new("L",(bw,bh),0); ImageDraw.Draw(mask).rounded_rectangle((0,0,bw,bh), radius=radius, fill=255)
     img.paste(im.convert("RGB"), (x0,y0), mask)
 
+
+NAVY=(43,27,77)
+def cutout(name):
+    im = Image.open(f"{CUTS}/{name}").convert("RGBA")
+    bb = im.getchannel("A").point(lambda v:255 if v>20 else 0).getbbox()
+    return im.crop(bb)
+def grad_rect(w,h,c0=(75,15,47),c1=(49,35,95)):
+    g = Image.new("RGB",(w,h)); p=g.load()
+    for yy in range(h):
+        for xx in range(w):
+            t=(xx/w*0.4+yy/h*0.6); p[xx,yy]=tuple(int(c0[i]+(c1[i]-c0[i])*t) for i in range(3))
+    return g
+
 slides = []
 PH = (1030,110,1790,930)
 # 1
 img,d = new(); tag(d,1)
-block(d, [[("Quanto ",VIN),("custa",CORAL),(" para",VIN)],[("sua empresa um",VIN)],[("funcionário não",VIN)],[("conseguir trabalhar?",VIN)]], "Bold", 108, 190, maxw=880)
-photo_card(img,"17.jpg",PH,(0.40,0.5))
-paste_logo(img, 260, right=100, bottom=60); slides.append((img,9))
+block(d, [[("Quanto ",VIN),("custa",CORAL),(" para sua",VIN)],[("empresa um funcionário não",VIN)],[("conseguir trabalhar?",VIN)]], "Bold", 140, 300, align="center", maxw=1560, gap=1.2)
+paste_logo(img, 260, right=100, bottom=70); slides.append((img,9))
 # 2
 img,d = new(); tag(d,2)
 block(d, [[("Agora multiplique por",VIN)]], "Medium", 76, 190, maxw=880)
 block(d, [[("×100",CORAL)]], "Bold", 430, 270, maxw=880)
 block(d, [[("funcionários.",VIN)]], "Bold", 120, 650, maxw=880)
-photo_card(img,"16.jpg",PH,(0.5,0.38))
+photo_card(img,"16.jpg",PH,(0.5,0.45))
 paste_logo(img, 260, right=100, bottom=60); slides.append((img,6))
 # 3
 img,d = new(); tag(d,3)
@@ -117,27 +129,43 @@ block(d, [[("NR-1?",CORAL)]], "Bold", 300, 425, maxw=840)
 block(d, [[("A Nexia faz grande parte desse caminho,",CREME)],[("com suporte e pós-venda.",CREME)]], "Medium", 42, 760, maxw=860, gap=1.3)
 d.rounded_rectangle((130,880,970,990), radius=55, fill=CREME)
 d.text((180,904),"Entre e converse com a gente  →", font=F("Bold",46), fill=VIN)
-photo_card(img,"15.jpg",(1030,190,1790,990),(0.58,0.62),tint=70)
+photo_card(img,"15.jpg",(1030,190,1790,990),(0.56,0.5),tint=70)
 paste_logo(img, 300, right=130, top=62, white=True)
 slides.append((img,9,True))
 # 9
 img,d = new(); tag(d,9)
-block(d, [[("Cuidar da saúde pode ser caro.",VIN)]], "Bold", 96, 190)
-block(d, [[("Não cuidar é",VIN)]], "Bold", 96, 340)
-block(d, [[("mais caro",CORAL)]], "Bold", 330, 440)
-block(d, [[("ainda.",VIN)]], "Bold", 120, 800)
-paste_logo(img, 260, right=100, bottom=70); slides.append((img,9))
+d.ellipse((1010,280,1850,1120), fill=CORAL)
+block(d, [[("Cuidar da saúde",VIN)],[("pode ser caro.",VIN)]], "Bold", 78, 170, maxw=800)
+block(d, [[("Não cuidar é",VIN)]], "Bold", 78, 375, maxw=800)
+block(d, [[("mais caro",CORAL)]], "Bold", 300, 450, maxw=800)
+block(d, [[("ainda.",VIN)]], "Bold", 110, 660, maxw=800)
+doc = cutout("medico_birefnet-general-lite.png"); w=960; h=int(doc.height*w/doc.width)
+doc = doc.resize((w,h), Image.LANCZOS); img.paste(doc,(1430-w//2, H-h),doc)
+paste_logo(img, 260, left=130, bottom=70); slides.append((img,9))
 # 10
 img,d = new(); tag(d,10)
-block(d, [[("Saúde na palma",VIN)],[("da mão.",VIN)],[("Sem deslocamento.",CORAL)]], "Bold", 120, 230, maxw=800)
-d.rounded_rectangle((1000,190,1800,800), radius=50, fill=CARD)
-items = ["Clínico geral 24h","Mais de 12 especialidades","Psicologia e nutrição","Clubes de benefícios","nacional e regional"]
-y=250
+block(d, [[("Saúde na palma",VIN)],[("da mão.",VIN)],[("Sem deslocamento.",CORAL)]], "Bold", 108, 170, maxw=800)
+items = ["Clínico geral 24h","Mais de 12 especialidades","Psicologia e nutrição","Clubes de benefícios nacional e regional"]
+f = F("Bold",36); y0 = 545
 for i,t in enumerate(items):
-    if i<4: d.ellipse((1050,y+16,1078,y+44), fill=CORAL)
-    d.text((1100, y), t, font=F("Bold" if i<4 else "Medium",46), fill=VIN)
-    y += 120 if i!=3 else 62
-paste_logo(img, 260, right=100, bottom=70); slides.append((img,9))
+    wpill = int(d.textlength(t,font=f))+130; yy = y0+i*100
+    d.rounded_rectangle((130,yy,130+wpill,yy+82), radius=41, fill=CARD)
+    d.ellipse((160,yy+27,188,yy+55), fill=CORAL)
+    d.text((210,yy+20), t, font=f, fill=VIN)
+d.ellipse((1010,160,1810,960), fill=CORAL)
+PX0,PY0,PX1,PY1 = 1150,130,1670,960
+mask = Image.new("L",(PX1-PX0,PY1-PY0),0); ImageDraw.Draw(mask).rounded_rectangle((0,0,PX1-PX0,PY1-PY0), radius=70, fill=255)
+img.paste(grad_rect(PX1-PX0,PY1-PY0),(PX0,PY0),mask)
+frame = Image.new("RGBA",(W,H),(0,0,0,0)); ImageDraw.Draw(frame).rounded_rectangle((PX0,PY0,PX1,PY1), radius=70, outline=NAVY+(255,), width=16)
+img.paste(frame,(0,0),frame)
+doc = cutout("medica_birefnet-general-lite.png"); hh=930; w=int(doc.width*hh/doc.height)
+doc = doc.resize((w,hh), Image.LANCZOS)
+layer = Image.new("RGBA",(W,H),(0,0,0,0)); BOT=PY1-16
+layer.paste(doc,((PX0+PX1)//2 - w//2, BOT-hh),doc)
+al = layer.getchannel("A"); ImageDraw.Draw(al).rectangle((0,BOT,W,H),fill=0); layer.putalpha(al)
+img.paste(layer,(0,0),layer)
+strip = frame.crop((0,BOT-6,W,PY1+2)); img.paste(strip,(0,BOT-6),strip)
+paste_logo(img, 260, left=130, bottom=70); slides.append((img,9))
 # 11
 img,d = new(); tag(d,11)
 block(d, [[("Quem já escolheu cuidar da equipe",VIN)]], "Bold", 80, 160)
@@ -153,13 +181,13 @@ paste_logo(img, 260, right=100, bottom=70); slides.append((img,9))
 # 12
 img,d = new()
 block(d, [[("Cuidar de pessoas",VIN)],[("é fazer negócios",VIN)],[("ir ",VIN),("mais longe.",CORAL)]], "Bold", 112, 200, maxw=880)
-photo_card(img,"19.jpg",PH,(0.5,0.45))
+photo_card(img,"19.jpg",PH,(0.52,0.45))
 paste_logo(img, 520, left=130, bottom=80); slides.append((img,9))
 # 13
 img,d = new()
 block(d, [[("Vamos conversar",VIN)],[("sobre o futuro",VIN)],[("da ",VIN),("sua equipe?",CORAL)]], "Bold", 112, 140, maxw=880)
 card(d,(130,640,960,760),"@nexiasaude  |  (88) 8191-1058",42,"Bold")
-photo_card(img,"18.jpg",PH,(0.30,0.45))
+photo_card(img,"18.jpg",PH,(0.33,0.45))
 paste_logo(img, 520, left=130, bottom=80); slides.append((img,9))
 
 paths=[]; durs=[]; anim=[]
