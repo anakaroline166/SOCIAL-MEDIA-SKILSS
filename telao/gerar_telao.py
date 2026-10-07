@@ -3,208 +3,200 @@ from PIL import Image, ImageDraw, ImageFont
 
 OUT, LOGO, FONTS, IMGS, CUTS = sys.argv[1:6]
 W, H = 1920, 1080
-VIN, CORAL, CREME, CARD, GRAY = (75,15,47), (255,111,104), (255,247,242), (255,239,232), (140,110,125)
-def F(w, s):
-    f = "IntroBold" if w in ("ExtraBold","Bold") else "IntroBook"
-    return ImageFont.truetype(f"{FONTS}/{f}.otf", s)
+M = 110                                   # margem igual nos 4 lados
+VIN, CORAL, CREME, CARD, GRAY, NAVY, WHITE = (75,15,47), (255,111,104), (255,247,242), (255,239,232), (140,110,125), (43,27,77), (255,255,255)
+LEAD, GAP = 1.14, 44                      # entrelinha e espaço entre blocos, iguais em todos os slides
+BOX  = (M, M, W-M, 870)                   # área útil (acima da faixa do logo)
+LEFT = (M, M, 930, 870)                   # coluna do texto quando há foto
+PHOTO= (1050, M, W-M, 870)                # coluna da foto (760 x 760)
 
-logo_w = Image.open(LOGO).convert("RGBA")
-logo = logo_w.copy(); px = logo.load()
+def F(w, s):
+    return ImageFont.truetype(f"{FONTS}/{'IntroBold' if w in ('ExtraBold','Bold') else 'IntroBook'}.otf", max(int(s),8))
+
+logo_w = Image.open(LOGO).convert("RGBA"); logo = logo_w.copy(); px = logo.load()
 for y in range(logo.height):
     for x in range(logo.width):
         r,g,b,a = px[x,y]
-        if a > 0 and r > 200 and g > 200 and b > 200: px[x,y] = (43,27,77,a)
-def paste_logo(img, width, left=None, right=None, bottom=None, top=None, cx=None, cy=None, white=False):
+        if a > 0 and r > 200 and g > 200 and b > 200: px[x,y] = NAVY+(a,)
+def paste_logo(img, white=False, width=240):
     src = logo_w if white else logo
     l = src.resize((width, int(src.height*width/src.width)), Image.LANCZOS)
-    x = cx - l.width//2 if cx is not None else (left if left is not None else W - right - l.width)
-    y = cy - l.height//2 if cy is not None else (top if top is not None else H - bottom - l.height)
-    img.paste(l, (x,y), l)
+    img.paste(l, (W//2 - l.width//2, H - M - l.height), l)
 
-def tw(d, segs, f): return sum(d.textlength(t, font=f) for t,_ in segs)
-def block(d, lines, weight, size, y, align="left", x0=130, maxw=1660, gap=1.15):
-    while True:
-        f = F(weight, size)
-        if max(tw(d,l,f) for l in lines) <= maxw or size < 30: break
-        size -= 2
-    for l in lines:
-        w = tw(d,l,f); x = x0 if align=="left" else (W-w)/2
-        for t,c in l:
-            d.text((x,y), t, font=f, fill=c); x += d.textlength(t, font=f)
-        y += int(size*gap)
-    return y
-def card(d, box, txt, size=44, weight="Medium", color=VIN):
-    d.rounded_rectangle(box, radius=40, fill=CARD)
-    f = F(weight, size); x0,y0,x1,y1 = box
-    d.text((x0+(x1-x0-d.textlength(txt,font=f))/2, y0+(y1-y0-size)/2-6), txt, font=f, fill=color)
-def tag(d, n): d.text((130,70), f"[{n:02d}]", font=F("Medium",34), fill=CORAL)
-def footer(d, txt): d.text((130,H-70), txt, font=F("Medium",26), fill=GRAY)
-def new(): im = Image.new("RGB",(W,H),(255,255,255)); return im, ImageDraw.Draw(im)
-
+def cutout(name):
+    im = Image.open(f"{CUTS}/{name}").convert("RGBA")
+    return im.crop(im.getchannel("A").point(lambda v:255 if v>20 else 0).getbbox())
+def grad(w,h,c0=(75,15,47),c1=(49,35,95),dx=0.5,dy=0.5):
+    g = Image.new("RGB",(w,h)); p=g.load()
+    for yy in range(h):
+        for xx in range(w):
+            t=xx/w*dx+yy/h*dy; p[xx,yy]=tuple(int(c0[i]+(c1[i]-c0[i])*t) for i in range(3))
+    return g
 def photo_card(img, name, box, focus=(0.5,0.5), tint=115, radius=50):
     x0,y0,x1,y1 = box; bw,bh = x1-x0, y1-y0
     im = Image.open(f"{IMGS}/{name}").convert("RGB")
     s = max(bw/im.width, bh/im.height)
     im = im.resize((int(im.width*s)+1, int(im.height*s)+1), Image.LANCZOS)
-    cx = int(focus[0]*im.width); cy = int(focus[1]*im.height)
+    cx,cy = int(focus[0]*im.width), int(focus[1]*im.height)
     l = min(max(cx-bw//2,0), im.width-bw); t = min(max(cy-bh//2,0), im.height-bh)
-    im = im.crop((l,t,l+bw,t+bh)).convert("RGBA")
-    im = Image.alpha_composite(im, Image.new("RGBA",(bw,bh),VIN+(tint,)))
+    im = Image.alpha_composite(im.crop((l,t,l+bw,t+bh)).convert("RGBA"), Image.new("RGBA",(bw,bh),VIN+(tint,)))
     mask = Image.new("L",(bw,bh),0); ImageDraw.Draw(mask).rounded_rectangle((0,0,bw,bh), radius=radius, fill=255)
     img.paste(im.convert("RGB"), (x0,y0), mask)
 
+# ---------- motor de layout ----------
+_probe = ImageDraw.Draw(Image.new("RGB",(10,10)))
+def tmetrics(lines, weight, size):
+    f=F(weight,size); lh=size*LEAD; tops=[];bots=[];ws=[]
+    for l in lines:
+        t=1e9; b=-1e9; w=0
+        for txt,c in l:
+            bb=_probe.textbbox((0,0),txt,font=f,anchor="ls"); t=min(t,bb[1]); b=max(b,bb[3]); w+=_probe.textlength(txt,font=f)
+        tops.append(-t); bots.append(b); ws.append(w)
+    return f,lh,tops,bots,ws, tops[0]+(len(lines)-1)*lh+bots[-1]
+def T(lines, weight="Bold", size=100):  return dict(k="text", lines=lines, w=weight, size=size)
+def CARDI(txt, size=44, weight="Medium", color=VIN, fill=CARD): return dict(k="card", txt=txt, size=size, w=weight, color=color, fill=fill)
+def PILLS(txts, size=34):  return dict(k="pills", txts=txts, size=size)
+def CUSTOM(h, fn):         return dict(k="custom", h=h, fn=fn)
 
-NAVY=(43,27,77)
-def cutout(name):
-    im = Image.open(f"{CUTS}/{name}").convert("RGBA")
-    bb = im.getchannel("A").point(lambda v:255 if v>20 else 0).getbbox()
-    return im.crop(bb)
-def grad_rect(w,h,c0=(75,15,47),c1=(49,35,95)):
-    g = Image.new("RGB",(w,h)); p=g.load()
-    for yy in range(h):
-        for xx in range(w):
-            t=(xx/w*0.4+yy/h*0.6); p[xx,yy]=tuple(int(c0[i]+(c1[i]-c0[i])*t) for i in range(3))
-    return g
+def prep(it, s, boxw):
+    if it["k"]=="text":
+        size=it["size"]*s
+        while True:
+            m=tmetrics(it["lines"], it["w"], size)
+            if max(m[4])<=boxw or size<24: break
+            size-=2
+        it["_m"]=m; it["_size"]=size; it["_h"]=m[5]
+    elif it["k"]=="card":
+        size=it["size"]*s
+        while True:
+            m=tmetrics([[(it["txt"],it["color"])]], it["w"], size)
+            if m[4][0]+140<=boxw or size<20: break
+            size-=2
+        it["_m"]=m; it["_size"]=size; it["_h"]=max(m[5]+2*34, 40)
+    elif it["k"]=="pills":
+        ph=int(84*s); it["_ph"]=ph; it["_h"]=len(it["txts"])*ph+(len(it["txts"])-1)*int(22*s)
+    else: it["_h"]=it["h"]
+def stack(img, d, items, box, bg_dark=False):
+    x0,y0,x1,y1 = box; bw,bh = x1-x0, y1-y0; cx=(x0+x1)/2
+    s=1.0
+    while True:
+        for it in items: prep(it, s, bw)
+        total=sum(it["_h"] for it in items)+GAP*(len(items)-1)
+        if total<=bh or s<0.45: break
+        s-=0.02
+    y=y0+(bh-total)/2
+    for it in items:
+        if it["k"]=="text":
+            f,lh,tops,bots,ws,h=it["_m"]
+            for i,l in enumerate(it["lines"]):
+                x=cx-ws[i]/2; by=y+tops[0]+i*lh
+                for txt,c in l:
+                    d.text((x,by),txt,font=f,fill=c,anchor="ls"); x+=d.textlength(txt,font=f)
+        elif it["k"]=="card":
+            f,lh,tops,bots,ws,h=it["_m"]; w=ws[0]+140
+            d.rounded_rectangle((cx-w/2,y,cx+w/2,y+it["_h"]), radius=int(it["_h"]/2) if it["_h"]<140 else 40, fill=it["fill"])
+            d.text((cx-ws[0]/2, y+it["_h"]/2-(tops[0]+bots[0])/2+tops[0]), it["txt"], font=f, fill=it["color"], anchor="ls")
+        elif it["k"]=="pills":
+            f=F("Bold",it["size"]*s); ph=it["_ph"]; yy=y
+            for t in it["txts"]:
+                w=d.textlength(t,font=f)+130
+                d.rounded_rectangle((cx-w/2,yy,cx+w/2,yy+ph), radius=ph//2, fill=CARD)
+                d.ellipse((cx-w/2+34,yy+ph/2-14,cx-w/2+62,yy+ph/2+14), fill=CORAL)
+                bb=d.textbbox((0,0),t,font=f,anchor="ls")
+                d.text((cx-w/2+86, yy+ph/2-(bb[1]+bb[3])/2), t, font=f, fill=VIN, anchor="ls")
+                yy+=ph+int(22*s)
+        else:
+            it["fn"](img,d,x0,y,bw)
+        y+=it["_h"]+GAP
+def new(dark=False):
+    im = grad(W,H,dx=0.6,dy=0.4) if dark else Image.new("RGB",(W,H),WHITE)
+    return im, ImageDraw.Draw(im)
+def footnote(txt): return T([[(txt,GRAY)]],"Medium",30)
 
-slides = []
-PH = (1030,110,1790,930)
+slides=[]
 # 1
-img,d = new(); tag(d,1)
-block(d, [[("Quanto ",VIN),("custa",CORAL),(" para sua",VIN)],[("empresa um funcionário não",VIN)],[("conseguir trabalhar?",VIN)]], "Bold", 140, 300, align="center", maxw=1560, gap=1.2)
-paste_logo(img, 260, right=100, bottom=70); slides.append((img,9))
+img,d=new(); stack(img,d,[T([[("Quanto ",VIN),("custa",CORAL),(" para sua",VIN)],[("empresa um funcionário não",VIN)],[("conseguir trabalhar?",VIN)]],"Bold",150)],BOX)
+paste_logo(img); slides.append((img,9))
 # 2
-img,d = new(); tag(d,2)
-block(d, [[("Agora multiplique por",VIN)]], "Medium", 76, 190, maxw=880)
-block(d, [[("×100",CORAL)]], "Bold", 430, 270, maxw=880)
-block(d, [[("funcionários.",VIN)]], "Bold", 120, 650, maxw=880)
-photo_card(img,"16.jpg",PH,(0.5,0.45))
-paste_logo(img, 260, right=100, bottom=60); slides.append((img,6))
+img,d=new(); stack(img,d,[T([[("Agora multiplique por",VIN)]],"Medium",70),T([[("×100",CORAL)]],"Bold",380),T([[("funcionários.",VIN)]],"Bold",110)],LEFT)
+photo_card(img,"16.jpg",PHOTO,(0.5,0.45)); paste_logo(img); slides.append((img,6))
 # 3
-img,d = new(); tag(d,3)
-block(d, [[("Um dia de falta não custa",VIN)]], "Bold", 96, 170)
-block(d, [[("R$ 54.",CORAL)]], "Bold", 380, 260)
-block(d, [[("Custa muito mais.",VIN)]], "Bold", 120, 680)
-card(d,(130,860,1250,980),"O salário é só a ponta do custo.",46)
-footer(d,"Base: salário mínimo 2026 (R$ 1.621 ÷ 30 dias)")
-paste_logo(img, 260, right=100, bottom=70); slides.append((img,9))
+img,d=new(); stack(img,d,[T([[("Um dia de falta não custa",VIN)]],"Bold",90),T([[("R$ 54.",CORAL)]],"Bold",320),T([[("Custa muito mais.",VIN)]],"Bold",110),CARDI("O salário é só a ponta do custo.",44),footnote("Base: salário mínimo 2026 (R$ 1.621 ÷ 30 dias)")],BOX)
+paste_logo(img); slides.append((img,9))
 # 4
-img,d = new(); tag(d,4)
-d.text((130,150),"“",font=F("Bold",420),fill=CORAL)
-block(d, [[("A falta aparece no ponto.",VIN)]], "Bold", 120, 470)
-block(d, [[("O prejuízo aparece no ",VIN),("resultado.",CORAL)]], "Bold", 120, 640)
-paste_logo(img, 260, right=100, bottom=70); slides.append((img,6))
+img,d=new(); stack(img,d,[T([[("“",CORAL)]],"Bold",300),T([[("A falta aparece no ponto.",VIN)],[("O prejuízo aparece no ",VIN),("resultado.",CORAL)]],"Bold",110)],BOX)
+paste_logo(img); slides.append((img,6))
 # 5
-img,d = new(); tag(d,5)
-block(d, [[("546 mil",CORAL)]], "Bold", 380, 150)
-block(d, [[("afastamentos por saúde mental",VIN)],[("no Brasil em 2025.",VIN)]], "Bold", 100, 600)
-card(d,(130,850,720,970),"+15% em um ano",52,"Bold",CORAL)
-footer(d,"Fonte: Ministério da Previdência Social")
-paste_logo(img, 260, right=100, bottom=70); slides.append((img,9))
+img,d=new(); stack(img,d,[T([[("546 mil",CORAL)]],"Bold",320),T([[("afastamentos por saúde mental",VIN)],[("no Brasil em 2025.",VIN)]],"Bold",96),CARDI("+15% em um ano",52,"Bold",CORAL),footnote("Fonte: Ministério da Previdência Social")],BOX)
+paste_logo(img); slides.append((img,9))
 # 6
-img,d = new(); tag(d,6)
-block(d, [[("4,1 milhões",CORAL)]], "Bold", 330, 160)
-block(d, [[("de afastamentos temporários do trabalho",VIN)],[("em 2025.",VIN)]], "Bold", 92, 590)
-card(d,(130,850,720,970),"+17% em um ano",52,"Bold",CORAL)
-footer(d,"Fonte: Ministério da Previdência Social")
-paste_logo(img, 260, right=100, bottom=70); slides.append((img,9))
+img,d=new(); stack(img,d,[T([[("4,1 milhões",CORAL)]],"Bold",300),T([[("de afastamentos temporários do trabalho",VIN)],[("em 2025.",VIN)]],"Bold",90),CARDI("+17% em um ano",52,"Bold",CORAL),footnote("Fonte: Ministério da Previdência Social")],BOX)
+paste_logo(img); slides.append((img,9))
 # 7
-img,d = new(); tag(d,7)
-block(d, [[("NR-1",CORAL)]], "Bold", 300, 130)
-block(d, [[("não é só obrigação.",VIN)],[("É gestão de um risco que",VIN)],[("custa dinheiro.",CORAL)]], "Bold", 100, 470)
-card(d,(130,880,1300,990),"Risco psicossocial também aparece no caixa.",44)
-paste_logo(img, 260, right=100, bottom=70); slides.append((img,9))
+img,d=new(); stack(img,d,[T([[("NR-1",CORAL)]],"Bold",260),T([[("não é só obrigação.",VIN)],[("É gestão de um risco que ",VIN),("custa dinheiro.",CORAL)]],"Bold",90),CARDI("Risco psicossocial também aparece no caixa.",42)],BOX)
+paste_logo(img); slides.append((img,9))
 # 8 NR-1 UAU
-grad = Image.new("RGB",(W,H)); gp = grad.load()
-for yy in range(H):
-    for xx in range(W):
-        t = (xx/W*0.6 + yy/H*0.4)
-        gp[xx,yy] = (int(75+(49-75)*t), int(15+(35-15)*t), int(47+(95-47)*t))
-img = grad; d = ImageDraw.Draw(img)
-pf = F("Bold",36); ptxt = "NR-1  ·  RISCOS PSICOSSOCIAIS"
-pw = int(d.textlength(ptxt,font=pf))+90
-d.rounded_rectangle((130,90,130+pw,170), radius=40, fill=CORAL)
-d.text((175,108),ptxt,font=pf,fill=(255,255,255))
-block(d, [[("Sua empresa está",CREME)],[("pronta para a",CREME)]], "Bold", 104, 205, maxw=840, gap=1.08)
-block(d, [[("NR-1?",CORAL)]], "Bold", 300, 425, maxw=840)
-block(d, [[("A Nexia faz grande parte desse caminho,",CREME)],[("com suporte e pós-venda.",CREME)]], "Medium", 42, 760, maxw=860, gap=1.3)
-d.rounded_rectangle((130,880,970,990), radius=55, fill=CREME)
-d.text((180,904),"Entre e converse com a gente  →", font=F("Bold",46), fill=VIN)
-photo_card(img,"15.jpg",(1030,190,1790,990),(0.56,0.5),tint=70)
-paste_logo(img, 300, right=130, top=62, white=True)
-slides.append((img,9,True))
-# 9
-img,d = new(); tag(d,9)
-d.ellipse((1010,280,1850,1120), fill=CORAL)
-block(d, [[("Cuidar da saúde",VIN)],[("pode ser caro.",VIN)]], "Bold", 78, 170, maxw=800)
-block(d, [[("Não cuidar é",VIN)]], "Bold", 78, 375, maxw=800)
-block(d, [[("mais caro",CORAL)]], "Bold", 300, 450, maxw=800)
-block(d, [[("ainda.",VIN)]], "Bold", 110, 660, maxw=800)
-doc = cutout("medico_birefnet-general-lite.png"); w=960; h=int(doc.height*w/doc.width)
-doc = doc.resize((w,h), Image.LANCZOS); img.paste(doc,(1430-w//2, H-h),doc)
-paste_logo(img, 260, left=130, bottom=70); slides.append((img,9))
-# 10
-img,d = new(); tag(d,10)
-block(d, [[("Saúde na palma",VIN)],[("da mão.",VIN)],[("Sem deslocamento.",CORAL)]], "Bold", 108, 170, maxw=800)
-items = ["Clínico geral 24h","Mais de 12 especialidades","Psicologia e nutrição","Clubes de benefícios nacional e regional"]
-f = F("Bold",36); y0 = 545
-for i,t in enumerate(items):
-    wpill = int(d.textlength(t,font=f))+130; yy = y0+i*100
-    d.rounded_rectangle((130,yy,130+wpill,yy+82), radius=41, fill=CARD)
-    d.ellipse((160,yy+27,188,yy+55), fill=CORAL)
-    d.text((210,yy+20), t, font=f, fill=VIN)
-d.ellipse((1010,160,1810,960), fill=CORAL)
-PX0,PY0,PX1,PY1 = 1150,130,1670,960
-mask = Image.new("L",(PX1-PX0,PY1-PY0),0); ImageDraw.Draw(mask).rounded_rectangle((0,0,PX1-PX0,PY1-PY0), radius=70, fill=255)
-img.paste(grad_rect(PX1-PX0,PY1-PY0),(PX0,PY0),mask)
-frame = Image.new("RGBA",(W,H),(0,0,0,0)); ImageDraw.Draw(frame).rounded_rectangle((PX0,PY0,PX1,PY1), radius=70, outline=NAVY+(255,), width=16)
+img,d=new(True)
+stack(img,d,[CARDI("NR-1  ·  RISCOS PSICOSSOCIAIS",34,"Bold",WHITE,CORAL),
+  T([[("Sua empresa está",CREME)],[("pronta para a",CREME)]],"Bold",96),
+  T([[("NR-1?",CORAL)]],"Bold",260),
+  T([[("A Nexia faz grande parte desse caminho,",CREME)],[("com suporte e pós-venda.",CREME)]],"Medium",40),
+  CARDI("Entre e converse com a gente  →",44,"Bold",VIN,CREME)],LEFT)
+photo_card(img,"15.jpg",PHOTO,(0.56,0.5),tint=70); paste_logo(img,white=True); slides.append((img,9,True))
+# 9 médico
+img,d=new()
+stack(img,d,[T([[("Cuidar da saúde",VIN)],[("pode ser caro.",VIN)]],"Bold",80),T([[("Não cuidar é",VIN)]],"Bold",80),T([[("mais caro",CORAL)]],"Bold",230),T([[("ainda.",VIN)]],"Bold",100)],LEFT)
+cx0,cy0,cx1,cy1 = PHOTO; ccx=(cx0+cx1)//2; ccy=(cy0+cy1)//2
+d.ellipse(PHOTO, fill=CORAL)
+doc=cutout("medico_birefnet-general-lite.png"); w=740; h=int(doc.height*w/doc.width); doc=doc.resize((w,h),Image.LANCZOS)
+layer=Image.new("RGBA",(W,H),(0,0,0,0)); layer.paste(doc,(ccx-w//2, cy1-h),doc)
+clip=Image.new("L",(W,H),0); cd=ImageDraw.Draw(clip); cd.ellipse(PHOTO,fill=255); cd.rectangle((0,0,W,ccy),fill=255)
+al=layer.getchannel("A"); layer.putalpha(Image.composite(al,Image.new("L",(W,H),0),clip))
+img.paste(layer,(0,0),layer); paste_logo(img); slides.append((img,9))
+# 10 médica no celular
+img,d=new()
+stack(img,d,[T([[("Saúde na palma",VIN)],[("da mão.",VIN)],[("Sem deslocamento.",CORAL)]],"Bold",100),PILLS(["Clínico geral 24h","Mais de 12 especialidades","Psicologia e nutrição","Clubes de benefícios nacional e regional"],32)],LEFT)
+d.ellipse(PHOTO, fill=CORAL)
+PX0,PX1,PY0,PY1 = ccx-230, ccx+230, 180, 870
+mask=Image.new("L",(PX1-PX0,PY1-PY0),0); ImageDraw.Draw(mask).rounded_rectangle((0,0,PX1-PX0,PY1-PY0),radius=70,fill=255)
+img.paste(grad(PX1-PX0,PY1-PY0,dx=0.4,dy=0.6),(PX0,PY0),mask)
+frame=Image.new("RGBA",(W,H),(0,0,0,0)); ImageDraw.Draw(frame).rounded_rectangle((PX0,PY0,PX1,PY1),radius=70,outline=NAVY+(255,),width=16)
 img.paste(frame,(0,0),frame)
-doc = cutout("medica_birefnet-general-lite.png"); hh=930; w=int(doc.width*hh/doc.height)
-doc = doc.resize((w,hh), Image.LANCZOS)
-layer = Image.new("RGBA",(W,H),(0,0,0,0)); BOT=PY1-16
-layer.paste(doc,((PX0+PX1)//2 - w//2, BOT-hh),doc)
-al = layer.getchannel("A"); ImageDraw.Draw(al).rectangle((0,BOT,W,H),fill=0); layer.putalpha(al)
+doc=cutout("medica_birefnet-general-lite.png"); BOT=PY1-16; hh=BOT-M; w=int(doc.width*hh/doc.height); doc=doc.resize((w,hh),Image.LANCZOS)
+layer=Image.new("RGBA",(W,H),(0,0,0,0)); layer.paste(doc,(ccx-w//2,M),doc)
+al=layer.getchannel("A"); ad=ImageDraw.Draw(al); ad.rectangle((0,BOT,W,H),fill=0); ad.rectangle((0,PY1-160,PX0+20,BOT),fill=0); ad.rectangle((PX1-20,PY1-160,W,BOT),fill=0); layer.putalpha(al)
 img.paste(layer,(0,0),layer)
-strip = frame.crop((0,BOT-6,W,PY1+2)); img.paste(strip,(0,BOT-6),strip)
-paste_logo(img, 260, left=130, bottom=70); slides.append((img,9))
+strip=frame.crop((0,BOT-6,W,PY1+2)); img.paste(strip,(0,BOT-6),strip)
+paste_logo(img); slides.append((img,9))
 # 11
-img,d = new(); tag(d,11)
-block(d, [[("Quem já escolheu cuidar da equipe",VIN)]], "Bold", 80, 160)
-cols = [("+50","empresas clientes"),("+2.000","pessoas beneficiadas"),("+200","profissionais parceiros")]
-for i,(n,t) in enumerate(cols):
-    x0 = 130 + i*570
-    d.rounded_rectangle((x0,330,x0+520,780), radius=50, fill=CARD)
-    d.text((x0+40,360), f"[{i+1:02d}]", font=F("Medium",30), fill=CORAL)
-    d.text((x0+40,470), n, font=F("Bold",150 if len(n)<5 else 118), fill=CORAL)
-    d.text((x0+40,680), t, font=F("Bold",40), fill=VIN)
-d.text((130,830),"No Ceará, Rio Grande do Norte e Maranhão.", font=F("Medium",40), fill=GRAY)
-paste_logo(img, 260, right=100, bottom=70); slides.append((img,9))
+def numbers(img,d,x0,y,bw):
+    cols=[("+50","empresas clientes"),("+2.000","pessoas beneficiadas"),("+200","profissionais parceiros")]
+    cw,gap=500,40; start=x0+(bw-(3*cw+2*gap))/2
+    for i,(n,t) in enumerate(cols):
+        xx=start+i*(cw+gap); d.rounded_rectangle((xx,y,xx+cw,y+400),radius=50,fill=CARD)
+        nf=F("Bold",150 if len(n)<5 else 122); tf=F("Bold",38)
+        d.text((xx+cw/2-d.textlength(n,font=nf)/2,y+205),n,font=nf,fill=CORAL,anchor="ls")
+        d.text((xx+cw/2-d.textlength(t,font=tf)/2,y+310),t,font=tf,fill=VIN,anchor="ls")
+img,d=new(); stack(img,d,[T([[("Quem já escolheu cuidar da equipe",VIN)]],"Bold",84),CUSTOM(400,numbers),footnote("No Ceará, Rio Grande do Norte e Maranhão.")],BOX)
+paste_logo(img); slides.append((img,9))
 # 12
-img,d = new()
-block(d, [[("Cuidar de pessoas",VIN)],[("é fazer negócios",VIN)],[("ir ",VIN),("mais longe.",CORAL)]], "Bold", 112, 200, maxw=880)
-photo_card(img,"19.jpg",PH,(0.52,0.45))
-paste_logo(img, 520, left=130, bottom=80); slides.append((img,9))
+img,d=new(); stack(img,d,[T([[("Cuidar de pessoas",VIN)],[("é fazer negócios",VIN)],[("ir ",VIN),("mais longe.",CORAL)]],"Bold",104)],LEFT)
+photo_card(img,"19.jpg",PHOTO,(0.52,0.45)); paste_logo(img); slides.append((img,9))
 # 13
-img,d = new()
-block(d, [[("Vamos conversar",VIN)],[("sobre o futuro",VIN)],[("da ",VIN),("sua equipe?",CORAL)]], "Bold", 112, 140, maxw=880)
-card(d,(130,640,960,760),"@nexiasaude  |  (88) 8191-1058",42,"Bold")
-photo_card(img,"18.jpg",PH,(0.33,0.45))
-paste_logo(img, 520, left=130, bottom=80); slides.append((img,9))
+img,d=new(); stack(img,d,[T([[("Vamos conversar",VIN)],[("sobre o futuro",VIN)],[("da ",VIN),("sua equipe?",CORAL)]],"Bold",104),CARDI("@nexiasaude  |  (88) 8191-1058",38,"Bold")],LEFT)
+photo_card(img,"18.jpg",PHOTO,(0.36,0.45)); paste_logo(img); slides.append((img,9))
 
-paths=[]; durs=[]; anim=[]
+paths=[];durs=[];anim=[]
 for i,sl in enumerate(slides,1):
     p=f"{OUT}/slides/tela_{i:02d}.png"; sl[0].save(p); paths.append(p); durs.append(sl[1]); anim.append(len(sl)>2)
-FADE=0.6; FPS=30
-cmd=["ffmpeg","-y"]
-for p,dur,a in zip(paths,durs,anim):
-    cmd += ["-i",p] if a else ["-loop","1","-t",str(dur),"-framerate",str(FPS),"-i",p]
-fc=[]; labels=[]
+FADE=0.6; FPS=30; cmd=["ffmpeg","-y"]
+for p,dur,a in zip(paths,durs,anim): cmd += ["-i",p] if a else ["-loop","1","-t",str(dur),"-framerate",str(FPS),"-i",p]
+fc=[];labels=[]
 for k,a in enumerate(anim):
-    if a: fc.append(f"[{k}:v]scale=3840:2160,zoompan=z='1+0.06*on/{durs[k]*FPS}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={durs[k]*FPS}:s=1920x1080:fps={FPS},setsar=1[a{k}]")
-    else: fc.append(f"[{k}:v]fps={FPS},setsar=1[a{k}]")
-    labels.append(f"[a{k}]")
+    fc.append(f"[{k}:v]scale=3840:2160,zoompan=z='1+0.03*on/{durs[k]*FPS}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={durs[k]*FPS}:s=1920x1080:fps={FPS},setsar=1[a{k}]" if a else f"[{k}:v]fps={FPS},setsar=1[a{k}]"); labels.append(f"[a{k}]")
 prev=labels[0]; acc=durs[0]
 for k in range(1,len(paths)):
-    off=round(acc-k*FADE,3); fc.append(f"{prev}{labels[k]}xfade=transition=fade:duration={FADE}:offset={off}[v{k}]"); prev=f"[v{k}]"; acc+=durs[k]
+    fc.append(f"{prev}{labels[k]}xfade=transition=fade:duration={FADE}:offset={round(acc-k*FADE,3)}[v{k}]"); prev=f"[v{k}]"; acc+=durs[k]
 cmd+=["-filter_complex",";".join(fc),"-map",prev,"-c:v","libx264","-pix_fmt","yuv420p","-crf","18","-r",str(FPS),f"{OUT}/telao_connect_valley_rascunho.mp4"]
 r=subprocess.run(cmd,capture_output=True,text=True)
 if r.returncode: print(r.stderr[-1500:]); sys.exit(1)
