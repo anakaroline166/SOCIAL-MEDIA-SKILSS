@@ -6,9 +6,9 @@ W, H = 1920, 1080
 M = 110                                   # margem igual nos 4 lados
 VIN, CORAL, CREME, CARD, GRAY, NAVY, WHITE = (75,15,47), (255,111,104), (255,247,242), (255,239,232), (140,110,125), (43,27,77), (255,255,255)
 LEAD, GAP = 1.12, 40                      # entrelinha e espaço entre blocos, iguais em todos os slides
-BOX  = (M, M, W-M, 870)                   # área útil (acima da faixa do logo)
-LEFT = (M, M, 930, 870)                   # coluna do texto quando há foto
-PHOTO= (1050, M, W-M, 870)                # coluna da foto (760 x 760)
+BOX  = (M, 190, W-M, 890)                   # área útil (acima da faixa do logo)
+LEFT = (M, 190, 930, 890)                   # coluna do texto quando há foto
+PHOTO= (1110, 190, W-M, 890)                # coluna da foto (760 x 760)
 
 def F(w, s):
     return ImageFont.truetype(f"{FONTS}/{'IntroBold' if w in ('ExtraBold','Bold') else 'IntroBook'}.otf", max(int(s),8))
@@ -18,10 +18,10 @@ for y in range(logo.height):
     for x in range(logo.width):
         r,g,b,a = px[x,y]
         if a > 0 and r > 200 and g > 200 and b > 200: px[x,y] = NAVY+(a,)
-def paste_logo(img, white=False, width=240):
+def paste_logo(img, white=False, width=220):
     src = logo_w if white else logo
     l = src.resize((width, int(src.height*width/src.width)), Image.LANCZOS)
-    img.paste(l, (W//2 - l.width//2, H - M - l.height), l)
+    img.paste(l, (W//2 - l.width//2, H - 80 - l.height), l)
 
 def cutout(name):
     im = Image.open(f"{CUTS}/{name}").convert("RGBA")
@@ -76,7 +76,7 @@ def prep(it, s, boxw):
     elif it["k"]=="pills":
         ph=int(84*s); it["_ph"]=ph; it["_h"]=len(it["txts"])*ph+(len(it["txts"])-1)*int(22*s)
     else: it["_h"]=it["h"]
-def stack(img, d, items, box, bg_dark=False, cap=0.78):
+def stack(img, d, items, box, bg_dark=False, cap=0.9):
     x0,y0,x1,y1 = box; bw,bh = x1-x0, y1-y0; cx=(x0+x1)/2
     s=1.0
     while True:
@@ -148,7 +148,7 @@ img,d=new()
 stack(img,d,[T([[("Cuidar da saúde",VIN)],[("pode ser caro.",VIN)]],"Bold",80),T([[("Não cuidar é",VIN)]],"Bold",80),T([[("mais caro",CORAL)]],"Bold",230),T([[("ainda.",VIN)]],"Bold",100)],LEFT,cap=1.0)
 cx0,cy0,cx1,cy1 = PHOTO; ccx=(cx0+cx1)//2; ccy=(cy0+cy1)//2
 d.ellipse(PHOTO, fill=CORAL)
-doc=cutout("medico_birefnet-general-lite.png"); w=740; h=int(doc.height*w/doc.width); doc=doc.resize((w,h),Image.LANCZOS)
+doc=cutout("medico_birefnet-general-lite.png"); w=680; h=int(doc.height*w/doc.width); doc=doc.resize((w,h),Image.LANCZOS)
 layer=Image.new("RGBA",(W,H),(0,0,0,0)); layer.paste(doc,(ccx-w//2, cy1-h),doc)
 clip=Image.new("L",(W,H),0); cd=ImageDraw.Draw(clip); cd.ellipse(PHOTO,fill=255); cd.rectangle((0,0,W,ccy),fill=255)
 al=layer.getchannel("A"); layer.putalpha(Image.composite(al,Image.new("L",(W,H),0),clip))
@@ -157,13 +157,13 @@ img.paste(layer,(0,0),layer); paste_logo(img); slides.append((img,9))
 img,d=new()
 stack(img,d,[T([[("Saúde na palma",VIN)],[("da mão.",VIN)],[("Sem deslocamento.",CORAL)]],"Bold",100),PILLS(["Clínico geral 24h","Mais de 12 especialidades","Psicologia e nutrição","Clubes de benefícios nacional e regional"],32)],LEFT,cap=1.0)
 d.ellipse(PHOTO, fill=CORAL)
-PX0,PX1,PY0,PY1 = ccx-230, ccx+230, 180, 870
+PX0,PX1,PY0,PY1 = ccx-210, ccx+210, PHOTO[1]+70, PHOTO[3]
 mask=Image.new("L",(PX1-PX0,PY1-PY0),0); ImageDraw.Draw(mask).rounded_rectangle((0,0,PX1-PX0,PY1-PY0),radius=70,fill=255)
 img.paste(grad(PX1-PX0,PY1-PY0,dx=0.4,dy=0.6),(PX0,PY0),mask)
 frame=Image.new("RGBA",(W,H),(0,0,0,0)); ImageDraw.Draw(frame).rounded_rectangle((PX0,PY0,PX1,PY1),radius=70,outline=NAVY+(255,),width=16)
 img.paste(frame,(0,0),frame)
-doc=cutout("medica_birefnet-general-lite.png"); BOT=PY1-16; hh=BOT-M; w=int(doc.width*hh/doc.height); doc=doc.resize((w,hh),Image.LANCZOS)
-layer=Image.new("RGBA",(W,H),(0,0,0,0)); layer.paste(doc,(ccx-w//2,M),doc)
+doc=cutout("medica_birefnet-general-lite.png"); BOT=PY1-16; hh=BOT-PHOTO[1]; w=int(doc.width*hh/doc.height); doc=doc.resize((w,hh),Image.LANCZOS)
+layer=Image.new("RGBA",(W,H),(0,0,0,0)); layer.paste(doc,(ccx-w//2,PHOTO[1]),doc)
 al=layer.getchannel("A"); ad=ImageDraw.Draw(al); ad.rectangle((0,BOT,W,H),fill=0); ad.rectangle((0,PY1-160,PX0+20,BOT),fill=0); ad.rectangle((PX1-20,PY1-160,W,BOT),fill=0); layer.putalpha(al)
 img.paste(layer,(0,0),layer)
 strip=frame.crop((0,BOT-6,W,PY1+2)); img.paste(strip,(0,BOT-6),strip)
