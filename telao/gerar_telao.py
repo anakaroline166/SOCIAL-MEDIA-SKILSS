@@ -164,7 +164,7 @@ frame=Image.new("RGBA",(W,H),(0,0,0,0)); ImageDraw.Draw(frame).rounded_rectangle
 img.paste(frame,(0,0),frame)
 doc=cutout("medica_birefnet-general-lite.png"); BOT=PY1-16; hh=BOT-PHOTO[1]; w=int(doc.width*hh/doc.height); doc=doc.resize((w,hh),Image.LANCZOS)
 layer=Image.new("RGBA",(W,H),(0,0,0,0)); layer.paste(doc,(ccx-w//2,PHOTO[1]),doc)
-al=layer.getchannel("A"); ad=ImageDraw.Draw(al); ad.rectangle((0,BOT,W,H),fill=0); ad.rectangle((0,PY1-160,PX0+20,BOT),fill=0); ad.rectangle((PX1-20,PY1-160,W,BOT),fill=0); layer.putalpha(al)
+al=layer.getchannel("A"); ad=ImageDraw.Draw(al); ad.rectangle((0,BOT,W,H),fill=0); ad.rectangle((0,BOT-45,PX0+20,BOT),fill=0); ad.rectangle((PX1-20,BOT-45,W,BOT),fill=0); layer.putalpha(al)
 img.paste(layer,(0,0),layer)
 strip=frame.crop((0,BOT-6,W,PY1+2)); img.paste(strip,(0,BOT-6),strip)
 paste_logo(img); slides.append((img,9))
