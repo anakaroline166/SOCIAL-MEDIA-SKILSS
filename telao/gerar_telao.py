@@ -169,8 +169,7 @@ def slide_doctor(items,dur):
     clip=Image.new("L",(W,H),0); cd=ImageDraw.Draw(clip); cd.ellipse(PHOTO,fill=255); cd.rectangle((0,0,W,ccy),fill=255)
     al=layer.getchannel("A"); layer.putalpha(Image.composite(al,Image.new("L",(W,H),0),clip))
     img.paste(layer,(0,0),layer); paste_logo(img); slides.append((img,dur))
-slide_doctor([T([[(w_,VIN)] for w_ in ["Cuidar","da","saúde","pode","ser","caro."]],"Bold",120)],6)
-slide_doctor([T([[(w_,VIN)] for w_ in ["Não","cuidar","é"]],"Bold",120),T([[("mais caro",CORAL)]],"Bold",230),T([[("ainda.",VIN)]],"Bold",120)],7)
+slide_doctor([T([[("Cuidar da saúde",VIN)],[("pode ser caro.",VIN)]],"Bold",84),T([[("Não cuidar é",VIN)]],"Bold",84),T([[("mais caro",CORAL)]],"Bold",190),T([[("ainda.",VIN)]],"Bold",84)],8)
 # 10 médica no celular
 img,d=new()
 stack(img,d,[T([[("Saúde na palma",VIN)],[("da mão.",VIN)],[("Sem deslocamento.",CORAL)]],"Bold",100),PILLS(["Clínico geral 24h","Mais de 12 especialidades","Psicologia e nutrição","Clubes de benefícios nacional e regional"],32)],LEFT,cap=1.0,align="left")
