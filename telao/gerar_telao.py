@@ -5,7 +5,7 @@ OUT, LOGO, FONTS, IMGS, CUTS = sys.argv[1:6]
 W, H = 1920, 1080
 M = 110                                   # margem igual nos 4 lados
 VIN, CORAL, CREME, CARD, GRAY, NAVY, WHITE = (75,15,47), (255,111,104), (255,247,242), (255,239,232), (140,110,125), (43,27,77), (255,255,255)
-LEAD, GAP = 1.14, 44                      # entrelinha e espaço entre blocos, iguais em todos os slides
+LEAD, GAP = 1.12, 40                      # entrelinha e espaço entre blocos, iguais em todos os slides
 BOX  = (M, M, W-M, 870)                   # área útil (acima da faixa do logo)
 LEFT = (M, M, 930, 870)                   # coluna do texto quando há foto
 PHOTO= (1050, M, W-M, 870)                # coluna da foto (760 x 760)
@@ -76,13 +76,13 @@ def prep(it, s, boxw):
     elif it["k"]=="pills":
         ph=int(84*s); it["_ph"]=ph; it["_h"]=len(it["txts"])*ph+(len(it["txts"])-1)*int(22*s)
     else: it["_h"]=it["h"]
-def stack(img, d, items, box, bg_dark=False):
+def stack(img, d, items, box, bg_dark=False, cap=0.78):
     x0,y0,x1,y1 = box; bw,bh = x1-x0, y1-y0; cx=(x0+x1)/2
     s=1.0
     while True:
         for it in items: prep(it, s, bw)
         total=sum(it["_h"] for it in items)+GAP*(len(items)-1)
-        if total<=bh or s<0.45: break
+        if total<=bh*cap or s<0.45: break
         s-=0.02
     y=y0+(bh-total)/2
     for it in items:
@@ -118,22 +118,22 @@ slides=[]
 img,d=new(); stack(img,d,[T([[("Quanto ",VIN),("custa",CORAL),(" para sua",VIN)],[("empresa um funcionário não",VIN)],[("conseguir trabalhar?",VIN)]],"Bold",150)],BOX)
 paste_logo(img); slides.append((img,9))
 # 2
-img,d=new(); stack(img,d,[T([[("Agora multiplique por",VIN)]],"Medium",70),T([[("×100",CORAL)]],"Bold",380),T([[("funcionários.",VIN)]],"Bold",110)],LEFT)
+img,d=new(); stack(img,d,[T([[("Agora multiplique por",VIN)]],"Medium",70),T([[("×100",CORAL)]],"Bold",380),T([[("funcionários.",VIN)]],"Bold",110)],LEFT,cap=1.0)
 photo_card(img,"16.jpg",PHOTO,(0.5,0.45)); paste_logo(img); slides.append((img,6))
 # 3
-img,d=new(); stack(img,d,[T([[("Um dia de falta não custa",VIN)]],"Bold",90),T([[("R$ 54.",CORAL)]],"Bold",320),T([[("Custa muito mais.",VIN)]],"Bold",110),CARDI("O salário é só a ponta do custo.",44),footnote("Base: salário mínimo 2026 (R$ 1.621 ÷ 30 dias)")],BOX)
+img,d=new(); stack(img,d,[T([[("Um dia de falta não custa",VIN)]],"Bold",90),T([[("R$ 54.",CORAL)]],"Bold",260),T([[("Custa muito mais.",VIN)]],"Bold",110),CARDI("O salário é só a ponta do custo.",44),footnote("Base: salário mínimo 2026 (R$ 1.621 ÷ 30 dias)")],BOX)
 paste_logo(img); slides.append((img,9))
 # 4
 img,d=new(); stack(img,d,[T([[("“",CORAL)]],"Bold",300),T([[("A falta aparece no ponto.",VIN)],[("O prejuízo aparece no ",VIN),("resultado.",CORAL)]],"Bold",110)],BOX)
 paste_logo(img); slides.append((img,6))
 # 5
-img,d=new(); stack(img,d,[T([[("546 mil",CORAL)]],"Bold",320),T([[("afastamentos por saúde mental",VIN)],[("no Brasil em 2025.",VIN)]],"Bold",96),CARDI("+15% em um ano",52,"Bold",CORAL),footnote("Fonte: Ministério da Previdência Social")],BOX)
+img,d=new(); stack(img,d,[T([[("546 mil",CORAL)]],"Bold",250),T([[("afastamentos por saúde mental",VIN)],[("no Brasil em 2025.",VIN)]],"Bold",96),CARDI("+15% em um ano",52,"Bold",CORAL),footnote("Fonte: Ministério da Previdência Social")],BOX)
 paste_logo(img); slides.append((img,9))
 # 6
-img,d=new(); stack(img,d,[T([[("4,1 milhões",CORAL)]],"Bold",300),T([[("de afastamentos temporários do trabalho",VIN)],[("em 2025.",VIN)]],"Bold",90),CARDI("+17% em um ano",52,"Bold",CORAL),footnote("Fonte: Ministério da Previdência Social")],BOX)
+img,d=new(); stack(img,d,[T([[("4,1 milhões",CORAL)]],"Bold",230),T([[("de afastamentos temporários do trabalho",VIN)],[("em 2025.",VIN)]],"Bold",90),CARDI("+17% em um ano",52,"Bold",CORAL),footnote("Fonte: Ministério da Previdência Social")],BOX)
 paste_logo(img); slides.append((img,9))
 # 7
-img,d=new(); stack(img,d,[T([[("NR-1",CORAL)]],"Bold",260),T([[("não é só obrigação.",VIN)],[("É gestão de um risco que ",VIN),("custa dinheiro.",CORAL)]],"Bold",90),CARDI("Risco psicossocial também aparece no caixa.",42)],BOX)
+img,d=new(); stack(img,d,[T([[("NR-1",CORAL)]],"Bold",220),T([[("não é só obrigação.",VIN)],[("É gestão de um risco que ",VIN),("custa dinheiro.",CORAL)]],"Bold",90),CARDI("Risco psicossocial também aparece no caixa.",42)],BOX)
 paste_logo(img); slides.append((img,9))
 # 8 NR-1 UAU
 img,d=new(True)
@@ -141,11 +141,11 @@ stack(img,d,[CARDI("NR-1  ·  RISCOS PSICOSSOCIAIS",34,"Bold",WHITE,CORAL),
   T([[("Sua empresa está",CREME)],[("pronta para a",CREME)]],"Bold",96),
   T([[("NR-1?",CORAL)]],"Bold",260),
   T([[("A Nexia faz grande parte desse caminho,",CREME)],[("com suporte e pós-venda.",CREME)]],"Medium",40),
-  CARDI("Entre e converse com a gente  →",44,"Bold",VIN,CREME)],LEFT)
+  CARDI("Entre e converse com a gente  →",44,"Bold",VIN,CREME)],LEFT,cap=1.0)
 photo_card(img,"15.jpg",PHOTO,(0.56,0.5),tint=70); paste_logo(img,white=True); slides.append((img,9,True))
 # 9 médico
 img,d=new()
-stack(img,d,[T([[("Cuidar da saúde",VIN)],[("pode ser caro.",VIN)]],"Bold",80),T([[("Não cuidar é",VIN)]],"Bold",80),T([[("mais caro",CORAL)]],"Bold",230),T([[("ainda.",VIN)]],"Bold",100)],LEFT)
+stack(img,d,[T([[("Cuidar da saúde",VIN)],[("pode ser caro.",VIN)]],"Bold",80),T([[("Não cuidar é",VIN)]],"Bold",80),T([[("mais caro",CORAL)]],"Bold",230),T([[("ainda.",VIN)]],"Bold",100)],LEFT,cap=1.0)
 cx0,cy0,cx1,cy1 = PHOTO; ccx=(cx0+cx1)//2; ccy=(cy0+cy1)//2
 d.ellipse(PHOTO, fill=CORAL)
 doc=cutout("medico_birefnet-general-lite.png"); w=740; h=int(doc.height*w/doc.width); doc=doc.resize((w,h),Image.LANCZOS)
@@ -155,7 +155,7 @@ al=layer.getchannel("A"); layer.putalpha(Image.composite(al,Image.new("L",(W,H),
 img.paste(layer,(0,0),layer); paste_logo(img); slides.append((img,9))
 # 10 médica no celular
 img,d=new()
-stack(img,d,[T([[("Saúde na palma",VIN)],[("da mão.",VIN)],[("Sem deslocamento.",CORAL)]],"Bold",100),PILLS(["Clínico geral 24h","Mais de 12 especialidades","Psicologia e nutrição","Clubes de benefícios nacional e regional"],32)],LEFT)
+stack(img,d,[T([[("Saúde na palma",VIN)],[("da mão.",VIN)],[("Sem deslocamento.",CORAL)]],"Bold",100),PILLS(["Clínico geral 24h","Mais de 12 especialidades","Psicologia e nutrição","Clubes de benefícios nacional e regional"],32)],LEFT,cap=1.0)
 d.ellipse(PHOTO, fill=CORAL)
 PX0,PX1,PY0,PY1 = ccx-230, ccx+230, 180, 870
 mask=Image.new("L",(PX1-PX0,PY1-PY0),0); ImageDraw.Draw(mask).rounded_rectangle((0,0,PX1-PX0,PY1-PY0),radius=70,fill=255)
@@ -180,10 +180,10 @@ def numbers(img,d,x0,y,bw):
 img,d=new(); stack(img,d,[T([[("Quem já escolheu cuidar da equipe",VIN)]],"Bold",84),CUSTOM(400,numbers),footnote("No Ceará, Rio Grande do Norte e Maranhão.")],BOX)
 paste_logo(img); slides.append((img,9))
 # 12
-img,d=new(); stack(img,d,[T([[("Cuidar de pessoas",VIN)],[("é fazer negócios",VIN)],[("ir ",VIN),("mais longe.",CORAL)]],"Bold",104)],LEFT)
+img,d=new(); stack(img,d,[T([[("Cuidar de pessoas",VIN)],[("é fazer negócios",VIN)],[("ir ",VIN),("mais longe.",CORAL)]],"Bold",104)],LEFT,cap=1.0)
 photo_card(img,"19.jpg",PHOTO,(0.52,0.45)); paste_logo(img); slides.append((img,9))
 # 13
-img,d=new(); stack(img,d,[T([[("Vamos conversar",VIN)],[("sobre o futuro",VIN)],[("da ",VIN),("sua equipe?",CORAL)]],"Bold",104),CARDI("@nexiasaude  |  (88) 8191-1058",38,"Bold")],LEFT)
+img,d=new(); stack(img,d,[T([[("Vamos conversar",VIN)],[("sobre o futuro",VIN)],[("da ",VIN),("sua equipe?",CORAL)]],"Bold",104),CARDI("@nexiasaude  |  (88) 8191-1058",38,"Bold")],LEFT,cap=1.0)
 photo_card(img,"18.jpg",PHOTO,(0.36,0.45)); paste_logo(img); slides.append((img,9))
 
 paths=[];durs=[];anim=[]
