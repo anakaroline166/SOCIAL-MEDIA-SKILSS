@@ -54,3 +54,10 @@ Produção: cerca de 4 posts por semana, em carrossel, estático e reels.
 
 ## Squad
 - Squad ativo: `nexia-instagram` (estrategista, redatora, revisora, designer). Aprovações da Karolzinha: foco da semana, calendário, textos e artes.
+
+## Campanha Outubro Rosa 2026 (a partir das artes prontas em `outubro_rosa/`; confirmar antes de repetir)
+- Arte da Nexia em parceria com mais de 30 empresas clientes (logo da empresa ao lado do logo da Nexia).
+- Mensagem das artes: "Cuidar hoje é mais tempo para o seu amanhã. A prevenção faz toda a diferença na sua saúde e na sua qualidade de vida."
+- Confirmado pela Karolzinha: a consulta com ginecologista é por telemedicina.
+- Ofertas: consultas com ginecologista com agendamento pela Nexia Saúde; descontos exclusivos na MedCenter para mamografia e ultrassonografia mamária.
+- Identidade visual: rosa, magenta, azul-marinho escuro, fonte Intro.
