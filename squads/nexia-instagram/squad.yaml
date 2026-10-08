@@ -1,0 +1,66 @@
+name: "Nexia Instagram"
+code: "nexia-instagram"
+description: "Planeja o calendário semanal, escreve, revisa e desenha os 4 posts de Instagram da Nexia Saúde (telemedicina corporativa), com aprovação da Karolzinha em três momentos."
+icon: "📱"
+version: "1.0.0"
+target_audience: "Empresários e gestores (principal), RH e pessoa física/família (secundário)"
+language: "pt-BR"
+
+skills:
+  - web_search
+  - web_fetch
+  - canva
+
+data:
+  - pipeline/data/research-brief.md
+  - pipeline/data/domain-framework.md
+  - pipeline/data/quality-criteria.md
+  - pipeline/data/output-examples.md
+  - pipeline/data/anti-patterns.md
+  - pipeline/data/tone-of-voice.md
+
+agents:
+  - estrategista
+  - redatora
+  - revisora
+  - designer
+
+pipeline:
+  steps:
+    - id: step-01-foco-da-semana
+      name: "Foco da semana"
+      type: checkpoint
+      file: pipeline/steps/step-01-foco-da-semana.md
+    - id: step-02-calendario
+      name: "Calendário semanal"
+      agent: estrategista
+      execution: subagent
+      file: pipeline/steps/step-02-calendario.md
+    - id: step-03-aprovar-calendario
+      name: "Aprovação do calendário"
+      type: checkpoint
+      file: pipeline/steps/step-03-aprovar-calendario.md
+    - id: step-04-legendas
+      name: "Legendas e textos"
+      agent: redatora
+      execution: subagent
+      file: pipeline/steps/step-04-legendas.md
+    - id: step-05-revisao
+      name: "Revisão"
+      agent: revisora
+      execution: subagent
+      on_reject: step-04-legendas
+      file: pipeline/steps/step-05-revisao.md
+    - id: step-06-aprovar-textos
+      name: "Aprovação dos textos"
+      type: checkpoint
+      file: pipeline/steps/step-06-aprovar-textos.md
+    - id: step-07-artes
+      name: "Artes no Canva"
+      agent: designer
+      execution: subagent
+      file: pipeline/steps/step-07-artes.md
+    - id: step-08-aprovar-artes
+      name: "Aprovação das artes"
+      type: checkpoint
+      file: pipeline/steps/step-08-aprovar-artes.md

@@ -1,0 +1,34 @@
+squad: "nexia-instagram"
+entry: step-01-foco-da-semana
+steps:
+  - id: step-01-foco-da-semana
+    file: steps/step-01-foco-da-semana.md
+    type: checkpoint
+  - id: step-02-calendario
+    file: steps/step-02-calendario.md
+    agent: estrategista
+  - id: step-03-aprovar-calendario
+    file: steps/step-03-aprovar-calendario.md
+    type: checkpoint
+  - id: step-04-legendas
+    file: steps/step-04-legendas.md
+    agent: redatora
+  - id: step-05-revisao
+    file: steps/step-05-revisao.md
+    agent: revisora
+    on_reject: step-04-legendas
+    max_review_cycles: 3
+  - id: step-06-aprovar-textos
+    file: steps/step-06-aprovar-textos.md
+    type: checkpoint
+  - id: step-07-artes
+    file: steps/step-07-artes.md
+    agent: designer
+  - id: step-08-aprovar-artes
+    file: steps/step-08-aprovar-artes.md
+    type: checkpoint
+checkpoints:
+  - step-01-foco-da-semana
+  - step-03-aprovar-calendario
+  - step-06-aprovar-textos
+  - step-08-aprovar-artes

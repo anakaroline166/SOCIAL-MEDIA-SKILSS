@@ -1,0 +1,5 @@
+name,displayName,icon,role,path
+estrategista,Paula Planejamento,📅,Estrategista de conteúdo,./agents/estrategista.agent.md
+redatora,Renata Redação,✍️,Redatora de Instagram,./agents/redatora.agent.md
+revisora,Rita Revisão,✅,Revisora de qualidade,./agents/revisora.agent.md
+designer,Daniela Design,🎨,Designer no Canva,./agents/designer.agent.md

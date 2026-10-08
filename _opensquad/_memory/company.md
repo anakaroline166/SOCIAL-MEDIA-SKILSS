@@ -48,3 +48,9 @@ Produção: cerca de 4 posts por semana, em carrossel, estático e reels.
 ## Identidade visual
 - A Nexia já tem identidade visual pronta no Canva (logo, cores, fontes e modelos de post). A designer deve usar os modelos e trocar texto e imagem.
 - Squad planejado: estrategista (calendário), redatora (legendas), revisora (checkpoints), designer (Canva). Publicação/agendamento no Instagram fica para um segundo squad.
+
+## Dados confirmados nas legendas do perfil (confirmar antes de repetir)
+- Telemedicina 24/7; clínico em até 24h; psicologia e nutrição; especialidades em até 15 dias.
+
+## Squad
+- Squad ativo: `nexia-instagram` (estrategista, redatora, revisora, designer). Aprovações da Karolzinha: foco da semana, calendário, textos e artes.
