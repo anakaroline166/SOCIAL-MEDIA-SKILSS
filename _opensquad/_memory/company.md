@@ -24,8 +24,15 @@ Plano de telemedicina contratado por empresas, para uso dos colaboradores:
 - Melhora de produtividade da empresa
 - Cuidado com a saúde física e mental do time
 
-## Tom de voz
-Formal, autêntico e direto, com um corpo por trás da ideia. Português sempre correto. Sem jargões.
+## Tom de voz (definido a partir das legendas e da bio do perfil)
+Formal, autêntico e direto, com um corpo por trás da ideia. Português sempre correto, pontuação completa.
+- Manter: frases curtas em sequência, dados concretos (24/7, clínico em até 24h, especialidades em até 15 dias), foco em produtividade, ausência e presenteísmo.
+- Ajustar: falar sempre em "nós" (marca), nunca "eu"; trocar "turnover silencioso" e "performance" por termos simples (ex.: "saída silenciosa de talentos", "resultado"); levar a NR-1 para o centro dos posts; abrir com uma situação real da rotina da empresa.
+- Slogan atual: "Menos espera. Mais saúde." / "Transformamos horas perdidas em performance."
+- Bio atual: "Para você e sua empresa: saúde de qualidade, 24h por dia. Planos individuais e soluções corporativas."
+- Atenção: a bio cita planos individuais, mas o foco dos posts é o empresário/gestor (B2B).
+- Prova social: empresas parceiras publicam sobre a contratação (ex.: escritório de advocacia anunciando o plano para o time). Bom material para posts.
 
 ## Canal
 Instagram, com conteúdo voltado a empresários e gestores.
+Produção: cerca de 4 posts por semana, em carrossel, estático e reels.
