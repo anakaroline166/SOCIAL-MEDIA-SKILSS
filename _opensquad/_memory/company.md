@@ -44,3 +44,7 @@ Produção: cerca de 4 posts por semana, em carrossel, estático e reels.
 - Preço: não aparece nos posts. A Karolzinha envia os valores se precisar.
 - Os posts alcançam mais empresas do que pessoas físicas.
 - Proporção sugerida: 3 posts por semana para empresário/gestor e 1 para pessoa física/família. Cada post fala com um público só, dito na primeira linha.
+
+## Identidade visual
+- A Nexia já tem identidade visual pronta no Canva (logo, cores, fontes e modelos de post). A designer deve usar os modelos e trocar texto e imagem.
+- Squad planejado: estrategista (calendário), redatora (legendas), revisora (checkpoints), designer (Canva). Publicação/agendamento no Instagram fica para um segundo squad.
