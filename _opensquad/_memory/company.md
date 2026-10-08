@@ -59,5 +59,6 @@ Produção: cerca de 4 posts por semana, em carrossel, estático e reels.
 - Arte da Nexia em parceria com mais de 30 empresas clientes (logo da empresa ao lado do logo da Nexia).
 - Mensagem das artes: "Cuidar hoje é mais tempo para o seu amanhã. A prevenção faz toda a diferença na sua saúde e na sua qualidade de vida."
 - Confirmado pela Karolzinha: a consulta com ginecologista é por telemedicina.
+- Confirmado pela Karolzinha em 08/10/2026: as ofertas abaixo seguem valendo e podem ser citadas (sem prazo nem condições informados: não escrever datas).
 - Ofertas: consultas com ginecologista com agendamento pela Nexia Saúde; descontos exclusivos na MedCenter para mamografia e ultrassonografia mamária.
 - Identidade visual: rosa, magenta, azul-marinho escuro, fonte Intro.
