@@ -46,7 +46,7 @@ Produção: cerca de 4 posts por semana, em carrossel, estático e reels.
 - Proporção sugerida: 3 posts por semana para empresário/gestor e 1 para pessoa física/família. Cada post fala com um público só, dito na primeira linha.
 
 ## Identidade visual
-- A Nexia já tem identidade visual pronta no Canva (logo, cores, fontes e modelos de post). A designer deve usar os modelos e trocar texto e imagem.
+- A Nexia já tem identidade visual pronta no Canva (logo, cores, fontes e modelos de post). A designer deve usar os modelos e trocar texto e imagem. Cores e fontes exatas ainda não foram enviadas.
 - Squad planejado: estrategista (calendário), redatora (legendas), revisora (checkpoints), designer (Canva). Publicação/agendamento no Instagram fica para um segundo squad.
 
 ## Dados confirmados nas legendas do perfil (confirmar antes de repetir)
@@ -61,4 +61,4 @@ Produção: cerca de 4 posts por semana, em carrossel, estático e reels.
 - Confirmado pela Karolzinha: a consulta com ginecologista é por telemedicina.
 - Confirmado pela Karolzinha em 08/10/2026: as ofertas abaixo seguem valendo e podem ser citadas (sem prazo nem condições informados: não escrever datas).
 - Ofertas: consultas com ginecologista com agendamento pela Nexia Saúde; descontos exclusivos na MedCenter para mamografia e ultrassonografia mamária.
-- Identidade visual: rosa, magenta, azul-marinho escuro, fonte Intro.
+- Identidade visual: NÃO CONFIRMADA. As artes da pasta `outubro_rosa/` foram feitas no ChatGPT e não são o padrão visual da Nexia (informado pela Karolzinha em 10/10/2026). Não usar como referência. Aguardando posts reais do feed da Nexia.
