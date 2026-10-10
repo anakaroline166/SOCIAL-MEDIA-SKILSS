@@ -1,6 +1,6 @@
 # Card extra — Incentivo de uso do benefício (Outubro Rosa)
 
-**Público:** colaborador que já tem a Nexia pela empresa (e quem tem plano individual) | **Formato:** estático 1080x1440 px | **Tom:** Acolhedor
+**Público:** colaborador que já tem a Nexia pela empresa (e quem tem plano individual) | **Formato:** estático 1080x1350 px | **Tom:** Acolhedor
 **Quem posta:** Instagram da Nexia | **Acesso:** link (endereço a confirmar)
 
 ## Texto da arte

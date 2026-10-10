@@ -26,7 +26,7 @@ Load these files before executing:
 2. Para cada post de `legendas.md`, escolher o modelo conforme formato e público: carrossel, estático ou capa de reels.
 3. Preencher textos e imagens com o texto aprovado, sem alterá-lo. Se não couber, não cortar: registrar aviso.
 4. Conferir cores, fontes, logo, legibilidade e se o texto bate com o aprovado.
-5. Exportar cada peça (PNG; 1080x1440 px para carrossel e estático, 1080x1920 px para capa de reels).
+5. Exportar cada peça (PNG; 1080x1350 px para carrossel e estático, 1080x1920 px para capa de reels).
 6. Para reels, entregar a capa e o roteiro de cenas; o vídeo é montado manualmente.
 7. Registrar links dos designs, arquivos exportados e pendências no formato abaixo.
 
@@ -53,10 +53,10 @@ The output MUST follow this exact structure:
 
 | # | Peça | Modelo usado | Link do Canva | Arquivo exportado | Observação |
 |---|------|--------------|---------------|-------------------|------------|
-| 1 | Carrossel NR-1 (8 slides) | Carrossel claro Nexia | link do design | 8 PNG, 1080x1440 | Capa com 11 palavras |
+| 1 | Carrossel NR-1 (8 slides) | Carrossel claro Nexia | link do design | 8 PNG, 1080x1350 | Capa com 11 palavras |
 | 2 | Capa de reels "Cadeira vazia" | Capa reels Nexia | link do design | 1 PNG, 1080x1920 | Vídeo a montar |
-| 3 | Estático "Um plano. Quatro pessoas cuidadas." | Estático família | link do design | 1 PNG, 1080x1440 | Sem alteração |
-| 4 | Estático de parceiro | Estático institucional | link do design | 1 PNG, 1080x1440 | Logo do parceiro pendente |
+| 3 | Estático "Um plano. Quatro pessoas cuidadas." | Estático família | link do design | 1 PNG, 1080x1350 | Sem alteração |
+| 4 | Estático de parceiro | Estático institucional | link do design | 1 PNG, 1080x1350 | Logo do parceiro pendente |
 
 ## Avisos
 - Post 4: aguardando o logo do parceiro, enviado pela Karolzinha.

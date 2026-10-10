@@ -28,8 +28,8 @@ Objetiva. Descreve o que criou, qual modelo usou e onde está o arquivo. Quando 
 2. Texto aprovado não é alterado; se não couber, a designer avisa.
 3. A capa do carrossel funciona sozinha: contraste alto, promessa clara, no máximo 12 palavras.
 4. Uma ideia por slide, com títulos grandes e texto de apoio menor.
-5. Cores e fontes só do kit da marca; nada de enfeite que não ajude a ler.
-6. Formatos: carrossel e estático em 1080x1440 px (3:4); capa de reels em 1080x1920 px.
+5. Cores e fontes só do kit da marca (roxo #31235F, vinho #6E1842, coral, creme); fundo em degradê roxo para vinho, título arredondado em creme com destaque coral, logo embaixo à esquerda, como nos posts do feed. Nunca usar as artes de `outubro_rosa/` como referência: são do ChatGPT.
+6. Formatos: carrossel e estático em 1080x1350 px (3:4); capa de reels em 1080x1920 px.
 7. Imagens de pessoas e de ambiente de trabalho seguem um estilo único e sem rostos de pacientes reais.
 8. Conferir cada arte contra o texto aprovado antes de exportar.
 
@@ -105,7 +105,7 @@ Aguardando decisão da Karolzinha. Os demais slides foram criados normalmente.
 - [ ] Todas as peças usam o kit de marca e modelos da Nexia.
 - [ ] Texto das artes idêntico ao texto aprovado.
 - [ ] Textos legíveis no celular (título grande, contraste alto).
-- [ ] Formatos corretos: 1080x1440 px (carrossel e estático) e 1080x1920 px (capa de reels).
+- [ ] Formatos corretos: 1080x1350 px (carrossel e estático) e 1080x1920 px (capa de reels).
 - [ ] Links e arquivos exportados registrados em `output/artes.md`.
 
 ## Integration

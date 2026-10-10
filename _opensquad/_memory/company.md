@@ -61,4 +61,24 @@ Produção: cerca de 4 posts por semana, em carrossel, estático e reels.
 - Confirmado pela Karolzinha: a consulta com ginecologista é por telemedicina.
 - Confirmado pela Karolzinha em 08/10/2026: as ofertas abaixo seguem valendo e podem ser citadas (sem prazo nem condições informados: não escrever datas).
 - Ofertas: consultas com ginecologista com agendamento pela Nexia Saúde; descontos exclusivos na MedCenter para mamografia e ultrassonografia mamária.
-- Identidade visual: NÃO CONFIRMADA. As artes da pasta `outubro_rosa/` foram feitas no ChatGPT e não são o padrão visual da Nexia (informado pela Karolzinha em 10/10/2026). Não usar como referência. Aguardando posts reais do feed da Nexia.
+- Identidade visual: ver seção "Identidade visual (Guia de Marca)".
+
+## Identidade visual (Guia de Marca, setembro de 2026)
+Fonte: "Guia Interno de Marca e Conteúdo" enviado pela Karolzinha (confidencial; o arquivo não fica no repositório). As artes da pasta `outubro_rosa/` são do ChatGPT e NÃO são o padrão da marca.
+- Paleta: vinho principal #6E1842, vinho escuro #4B0F2F, roxo #31235F, coral #FF6F68 (no logo, coral mais fechado), creme #FFF7F2, branco.
+- Estilo dos posts do feed: fundo em degradê roxo para vinho, foto de pessoa real recortada, ícone grande do logo em coral cortado pela borda, título em fonte arredondada creme com destaque em coral, logo embaixo à esquerda.
+- Fotos de pessoas reais em contexto de trabalho, família e atendimento; evitar estética hospitalar azul e fria, imagens de dor e banco de imagens artificial.
+- Formatos: feed vertical 1080x1350 px (padrão), quadrado 1080x1080, stories e capa de reels 1080x1920, WhatsApp 1080x1350.
+- Logos: ficam em `squads/nexia-instagram/pipeline/data/brand/`.
+- Kit mensal para clientes (feito no Canva): card de incentivo de uso, card da especialidade do mês, lembrete de marcação e cancelamento, parceiro em destaque, campanha sazonal, texto pronto para o RH.
+
+## Regras do guia que valem para todo post
+- Dado só entra se estiver confirmado; na dúvida, parar e pedir validação. Velocidade nunca vence segurança da informação.
+- Telepsicologia: duas sessões nos planos Premium. Nutrição: planos Premium. Individual Clínico: só clínico geral 24h. Psicologia e nutrição não são especialidade médica.
+- Especialidades: usar "+12 especialidades" só ligado ao plano vigente; agendamento em até 15 dias. Não listar nomes de especialidades sem a lista oficial.
+- Evitar: promessa de cura, diagnóstico, tom alarmista, "atendimento imediato", "elimina o absenteísmo", dados desatualizados.
+- Clube de Benefícios: nunca usar logo, percentual ou parceiro sem confirmar vigência, abrangência, quem tem direito e como resgatar.
+- Quem valida: conteúdo médico (sócio médico), planos e condições (Comercial ou direção), clube (responsável pelo clube), clientes e logos (direção e cliente), identidade visual (marketing ou direção).
+- Distribuição editorial: regular 40% institucional, 25% CS e comercial, 20% sazonal, 15% promocional. Mês de evento (Connect Valley, outubro): 30%, 20%, 15%, 35%.
+- CTAs de uso: "Acesse a plataforma. Marque sua consulta. Confira os parceiros."
+- Pendências oficiais: lista de especialidades, quantidade vigente, SLA do clínico, lista do clube, política de no-show.
