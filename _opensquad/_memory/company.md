@@ -103,3 +103,13 @@ Fonte: "Guia Interno de Marca e Conteúdo" enviado pela Karolzinha (confidencial
 - Comunidade de RH e gestão: #rhbrasil #pessoaegestao #empresarios #gestao.
 - Sazonais: #outubrorosa #setembroamarelo #novembroazul, só no mês.
 - Evitar hashtag de promessa de saúde (cura, milagre) e hashtags genéricas gigantes (#saude, #amor).
+
+## Observações gerais para os agentes (outubro de 2026)
+- Campanhas do momento: Connect Valley (evento de outubro, prioridade promocional), Outubro Rosa (em andamento) e Novembro Azul (próximo mês, começar a preparar).
+- Connect Valley: data, horários, endereço, estande, palestra e mini currículo do Thiago, e regras do plano promocional ainda não foram informados. Não publicar nada do evento sem esses dados e sem autorização de imagem.
+- Novembro Azul: saúde do homem e prevenção, sem constrangimento, quebrando a resistência de ir à consulta. Conteúdo médico precisa de validação.
+- Regra geral: nunca completar informação por conta própria. Em dúvida, parar e pedir validação.
+- Fluxo de cada peça: persona, frente (sazonal, institucional, promocional ou CS e comercial), objetivo único, fonte oficial, validação, criação, revisão, aprovação da Karolzinha, publicação.
+- Rotina: 4 posts por semana (carrossel, estático e reels), 3 para empresário/gestor e 1 para pessoa física/família, com ao menos 1 post por semana de "use o seu benefício".
+- Pendências oficiais: link da plataforma, lista de especialidades, SLA do clínico, lista do Clube de Benefícios, política de no-show, quais planos cada cliente tem, fonte da marca.
+- Psicologia e nutrição: planos Premium. Clínico geral 24h: todos os planos.
