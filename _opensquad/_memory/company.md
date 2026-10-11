@@ -82,3 +82,9 @@ Fonte: "Guia Interno de Marca e Conteúdo" enviado pela Karolzinha (confidencial
 - Distribuição editorial: regular 40% institucional, 25% CS e comercial, 20% sazonal, 15% promocional. Mês de evento (Connect Valley, outubro): 30%, 20%, 15%, 35%.
 - CTAs de uso: "Acesse a plataforma. Marque sua consulta. Confira os parceiros."
 - Pendências oficiais: lista de especialidades, quantidade vigente, SLA do clínico, lista do clube, política de no-show.
+
+## Plataforma de marca (proposta, a validar pela Karolzinha)
+- Cinco adjetivos: Humana, Prática, Segura, Próxima, Resolutiva.
+- Pilares editoriais: 1) Saúde a favor do resultado; 2) Gestão e liderança de pessoas; 3) Cuidado com a pessoa e a família; 4) Use o seu benefício; 5) Prova e bastidores.
+- Palavras a evitar: cura/garantido/diagnóstico; "o melhor" e "número 1"; "atendimento imediato"; "elimina o absenteísmo"; tom alarmista ou de culpa; "performance", "turnover silencioso", "healthtech", "SLA", "KPI" em post público; "eu" na voz da marca; tratar colaborador como custo; "paciente"; "plano de saúde" (confirmar com a direção por causa da regulação); "barato" (usar "acessível"); "telemedicina" nos cards de uso (preferir "plataforma completa de saúde").
+- Exemplo de copy aprovado como referência: legenda "Terça-feira, 9h. A cadeira vazia..." (estático para empresário) e o card "Seu plano tem clínico geral 24 horas, todos os dias."
