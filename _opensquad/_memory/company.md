@@ -88,3 +88,10 @@ Fonte: "Guia Interno de Marca e Conteúdo" enviado pela Karolzinha (confidencial
 - Pilares editoriais: 1) Saúde a favor do resultado; 2) Gestão e liderança de pessoas; 3) Cuidado com a pessoa e a família; 4) Use o seu benefício; 5) Prova e bastidores.
 - Palavras a evitar: cura/garantido/diagnóstico; "o melhor" e "número 1"; "atendimento imediato"; "elimina o absenteísmo"; tom alarmista ou de culpa; "performance", "turnover silencioso", "healthtech", "SLA", "KPI" em post público; "eu" na voz da marca; tratar colaborador como custo; "paciente"; "plano de saúde" (confirmar com a direção por causa da regulação); "barato" (usar "acessível"); "telemedicina" nos cards de uso (preferir "plataforma completa de saúde").
 - Exemplo de copy aprovado como referência: legenda "Terça-feira, 9h. A cadeira vazia..." (estático para empresário) e o card "Seu plano tem clínico geral 24 horas, todos os dias."
+
+## Formato, CTA e limites (proposta, a validar)
+- Carrossel: 7 a 8 telas, 1080x1350 px. Estrutura do guia: capa com promessa ou tensão, contexto, consequência, orientação prática, como a Nexia se conecta sem forçar venda, CTA único. Texto curto por tela (ideal 25 a 45 palavras; o guia pede evitar cards com muito texto).
+- CTA por objetivo: descoberta "Salve este conteúdo. Compartilhe com seu RH."; comercial "Fale com a Nexia. Conheça os planos."; uso "Acesse a plataforma. Marque sua consulta."; evento "Visite nosso estande." Um CTA por post.
+- Temas que não cobre: diagnóstico, tratamento, medicamento e dica clínica sem validação médica; promessa de cura; comparação com concorrente; preço e promoção sem aprovação; dado ou história individual de saúde; doença grave em tom de medo; parceiro do clube e logo de cliente sem autorização; prazo e texto de norma (NR-1) sem confirmação.
+- Observação: o guia permite carrossel de sintomas ou situações comuns, desde que sem diagnóstico e com orientação para buscar avaliação. O guia não menciona a NR-1.
+- Exemplos reais de linguagem do feed: "Benefício que não é usado não retém ninguém." e "A Nexia leva médicos e bem-estar direto aos seus colaboradores."
