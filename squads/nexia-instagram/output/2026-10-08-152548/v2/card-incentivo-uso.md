@@ -4,12 +4,12 @@
 **Quem posta:** Instagram da Nexia | **Acesso:** plataforma (endereço do link a confirmar)
 
 ## Texto da arte
-- Sem o nome "Outubro Rosa" na arte: só o laço rosa pequeno no topo
+- Sem o nome "Outubro Rosa" e sem o laço na arte
 - Título: Você tem ginecologia e psicologia no seu plano.
 - Apoio: Agende na plataforma completa de saúde da Nexia.
 - Botão: Marque sua consulta.
 
-(Formato 1080x1350 px, no padrão visual do guia de marca. Arte: `card/card-incentivo-uso-v4.png`.)
+(Formato 1080x1350 px, no padrão visual do guia de marca. Arte: `card/card-incentivo-uso-1-ginecologia-psicologia.png`.)
 
 ## Legenda
 Você tem ginecologia e psicologia no seu plano. É só usar.

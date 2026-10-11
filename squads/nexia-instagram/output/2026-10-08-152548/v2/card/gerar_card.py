@@ -32,16 +32,8 @@ img.alpha_composite(icon,(660,880))
 d=ImageDraw.Draw(img)
 
 M=84
-# etiqueta da campanha + laço rosa
-LABEL="Outubro Rosa"
-rx=M+2; ry=90
-d.ellipse((rx-2,ry+2,rx+22,ry+30),outline=ROSE,width=6)
-d.ellipse((rx+16,ry+2,rx+40,ry+30),outline=ROSE,width=6)
-d.polygon([(rx+14,ry+26),(rx+24,ry+26),(rx+12,ry+52),(rx+2,ry+52)],fill=ROSE)
-d.polygon([(rx+22,ry+26),(rx+32,ry+26),(rx+44,ry+52),(rx+34,ry+52)],fill=ROSE)
-
 # título
-y=200
+y=160
 for t,c in (("Você tem",CREAM),("ginecologia e",CORAL),("psicologia",CORAL),("no seu plano.",CREAM)):
     d.text((M,y),t,font=F("title",108),fill=c,anchor="la"); y+=116
 # apoio
