@@ -95,3 +95,11 @@ Fonte: "Guia Interno de Marca e Conteúdo" enviado pela Karolzinha (confidencial
 - Temas que não cobre: diagnóstico, tratamento, medicamento e dica clínica sem validação médica; promessa de cura; comparação com concorrente; preço e promoção sem aprovação; dado ou história individual de saúde; doença grave em tom de medo; parceiro do clube e logo de cliente sem autorização; prazo e texto de norma (NR-1) sem confirmação.
 - Observação: o guia permite carrossel de sintomas ou situações comuns, desde que sem diagnóstico e com orientação para buscar avaliação. O guia não menciona a NR-1.
 - Exemplos reais de linguagem do feed: "Benefício que não é usado não retém ninguém." e "A Nexia leva médicos e bem-estar direto aos seus colaboradores."
+
+## Hashtags (proposta, a validar; volumes não verificados)
+- Quantidade: 5 a 7 por post (máximo 10), sempre no fim da legenda.
+- Marca: #nexiasaude (sempre) e, opcional, #saudeafavordoresultado (a criar, vem da ideia central do guia).
+- Nicho: #saudecorporativa #gestaodepessoas #rh #beneficioscorporativos #bemestarcorporativo #saudenotrabalho #produtividade #retencaodetalentos.
+- Comunidade de RH e gestão: #rhbrasil #pessoaegestao #empresarios #gestao.
+- Sazonais: #outubrorosa #setembroamarelo #novembroazul, só no mês.
+- Evitar hashtag de promessa de saúde (cura, milagre) e hashtags genéricas gigantes (#saude, #amor).
