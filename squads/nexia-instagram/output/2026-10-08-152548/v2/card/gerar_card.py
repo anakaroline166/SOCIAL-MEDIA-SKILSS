@@ -34,9 +34,7 @@ d=ImageDraw.Draw(img)
 M=84
 # etiqueta da campanha + laço rosa
 LABEL="Outubro Rosa"
-d.text((M,86),LABEL,font=F("title",40),fill=CREAM,anchor="la")
-tw=d.textlength(LABEL,font=F("title",40))
-rx=M+tw+30; ry=90
+rx=M+2; ry=90
 d.ellipse((rx-2,ry+2,rx+22,ry+30),outline=ROSE,width=6)
 d.ellipse((rx+16,ry+2,rx+40,ry+30),outline=ROSE,width=6)
 d.polygon([(rx+14,ry+26),(rx+24,ry+26),(rx+12,ry+52),(rx+2,ry+52)],fill=ROSE)
