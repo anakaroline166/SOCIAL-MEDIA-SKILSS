@@ -33,9 +33,10 @@ d=ImageDraw.Draw(img)
 
 M=84
 # etiqueta da campanha + laço rosa
-d.text((M,92),"OUTUBRO ROSA",font=F("bodyb",30),fill=CREAM,anchor="la")
-tw=d.textlength("OUTUBRO ROSA",font=F("bodyb",30))
-rx=M+tw+34; ry=92
+LABEL="Outubro Rosa"
+d.text((M,86),LABEL,font=F("title",40),fill=CREAM,anchor="la")
+tw=d.textlength(LABEL,font=F("title",40))
+rx=M+tw+30; ry=90
 d.ellipse((rx-2,ry+2,rx+22,ry+30),outline=ROSE,width=6)
 d.ellipse((rx+16,ry+2,rx+40,ry+30),outline=ROSE,width=6)
 d.polygon([(rx+14,ry+26),(rx+24,ry+26),(rx+12,ry+52),(rx+2,ry+52)],fill=ROSE)
@@ -47,11 +48,10 @@ for t,c in (("Você tem",CREAM),("ginecologia e",CORAL),("psicologia",CORAL),("n
     d.text((M,y),t,font=F("title",108),fill=c,anchor="la"); y+=116
 # apoio
 fy=y+36
-parts=[("Consulta por ",CREAM,"body"),("telemedicina",CORAL,"bodyb"),(",",CREAM,"body")]
 x=M
-for t,c,k in parts:
+for t,c,k in (("Agende na ",CREAM,"body"),("plataforma completa",CORAL,"bodyb")):
     d.text((x,fy),t,font=F(k,42),fill=c,anchor="la"); x+=d.textlength(t,font=F(k,42))
-d.text((M,fy+58),"agendada pela Nexia Saúde.",font=F("body",42),fill=CREAM,anchor="la")
+d.text((M,fy+58),"de saúde da Nexia.",font=F("body",42),fill=CREAM,anchor="la")
 
 # botão
 by=fy+190
