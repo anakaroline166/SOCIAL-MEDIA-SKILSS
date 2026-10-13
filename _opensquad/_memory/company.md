@@ -113,3 +113,11 @@ Fonte: "Guia Interno de Marca e Conteúdo" enviado pela Karolzinha (confidencial
 - Rotina: 4 posts por semana (carrossel, estático e reels), 3 para empresário/gestor e 1 para pessoa física/família, com ao menos 1 post por semana de "use o seu benefício".
 - Pendências oficiais: link da plataforma, lista de especialidades, SLA do clínico, lista do Clube de Benefícios, política de no-show, quais planos cada cliente tem, fonte da marca.
 - Psicologia e nutrição: planos Premium. Clínico geral 24h: todos os planos.
+
+## Connect Valley (dados vistos nos posts de save the date, enviados pela Karolzinha em 13/10/2026)
+- Datas: sexta 16 (dia 1) e sábado 17 (dia 2) de outubro de 2026.
+- Local: aparece nas artes como "C. CONV. SOBRAL" (provavelmente Centro de Convenções de Sobral; confirmar o nome completo e o endereço).
+- Texto já publicado: "A Nexia Saúde estará no Connect Valley. Venha conhecer a telemedicina pensada para a sua empresa."
+- Visual do evento: degradê vinho para roxo, título "SAVE THE DATE" em pêssego, cartões com data em vidro fosco, faixa de contagem "A contagem começou... 16.10", faixa coral com texto, logos Connect Valley (topo) e Nexia (rodapé), ícone coral cortado na borda. Formatos: feed 1080x1350 e stories 1080x1920.
+- Ainda pendentes: horários, número do estande, palestra e mini currículo do Thiago, o que haverá no estande, regras do plano promocional, autorização de imagem.
+- Prazo: o evento começa em 3 dias; a fase do guia agora é "urgência" (D-7 a D-1): contagem regressiva, horários, localização, convite e chamada para visitar o estande.
